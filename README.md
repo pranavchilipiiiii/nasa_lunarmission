@@ -11,7 +11,10 @@ Work in progress (hackathon weekend, Nov 14-15, 2026).
 The first working starter includes a rotatable/clickable Moon, coordinate entry,
 UTC date controls spanning one year (`data/ephemeris-year.json`), real cached NASA/JPL data, elevation cards,
 compass directions, disc-visibility estimates, moving 30-day charts,
-two-site comparison, and method/source disclosures. All browser dependencies are
+two-site comparison, a 15-site mission catalog, and method/source disclosures.
+Five planning tabs add Earth-view lunar phases, a panoramic surface sky, visibility
+windows/countdowns, same-site alternative dates, and labeled simplified obstruction,
+horizontal-panel power and radiative reference-plate scenarios. All browser dependencies are
 local. No framework, package install, account, or API key is needed to run it.
 
 The detailed Moon is `assets/moon_lro_web.glb` (5.08 MB, 121,828 triangles,
@@ -50,6 +53,7 @@ node tests/math.test.mjs
 node tests/moon-model.test.mjs
 node tests/math-additions.test.mjs
 node tests/extended-validation.test.mjs
+node tests/mission.test.mjs
 node --check app.js
 python3 scripts/fetch_data.py
 ```
@@ -74,7 +78,7 @@ has been enabled and deployment has completed.
 See [SOURCES.md](SOURCES.md) for the exact NASA sources, model assumptions, third-party
 license, collaborator-reported validation, and AI assistance. Supported dates:
 2026-11-14 00:00 through 2027-11-14 00:00 UTC. Terrain shadows, eclipses,
-radio links, generated watts, and thermal conditions are not calculated.
+radio-link engineering, actual equipment performance and actual ground temperatures are not calculated. The Simple estimates tab uses explicit hypothetical assumptions; see SOURCES.md.
 
 ## Data
 

@@ -75,3 +75,17 @@ above a smooth horizon, not direct-Horizons validation results. Sun angular radi
 is fixed at 0.267°; Earth radius uses finite observer distance. Neither terrain
 occultation nor eclipses are included. First/last disc contact times are not
 implemented: all event labels explicitly refer to center crossings.
+
+## Lunar-cycle and planning-tool checks
+
+Seven additional direct Horizons **illuminated-percentage** references (quantity 10)
+cover Nov 14–Dec 14, 2026 at five-day spacing. Worst difference: 0.0000041 percentage
+point. These are distinct from the 174 elevation comparisons above. Query, original
+response and values are in `tests/lunar-phase-reference.json`.
+
+`node tests/mission.test.mjs` checks new/full/quarter geometric limits, official
+calendar coverage, clipped piecewise-linear visibility intervals, catalog coordinate
+bounds, obstruction/power limiting cases, and radiative equation balance. The
+USNO phase calendar is cached with original responses. No independent validation
+of actual terrain, solar-array output or hardware temperature is claimed: the
+assumptions and excluded effects are explicit in the estimates tab and SOURCES.md.

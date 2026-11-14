@@ -4,6 +4,8 @@ import { GLTFLoader } from './vendor/GLTFLoader.js';
 import {direction,coordinates,atTime,elevations,series,nextCrossing,chartWindow,validateCache} from './math.mjs';
 
 import {skyState} from './math-additions.mjs';
+import {duration} from './mission.mjs';
+import {setupMissionTools,updateMissionTools} from './mission-ui.js';
 
 const $ = id => document.getElementById(id);
 let data, time, site={lat:-89,lon:0}, pins=[], points=[], playing=false, windowRange;
@@ -115,9 +117,10 @@ function chartSVG(points,current,mini=false,domain,location=site){
   for(let i=0;i<4;i++){const t=times[0]+(times[1]-times[0])*i/3;inner+=`<text x="${x(t)}" y="${h-7}" text-anchor="middle">${dayLabel(t)}</text>`;}
   return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevation over thirty days for ${fmtCoord(location)}. Horizontal dashed line is zero degrees." style="font:10px Arial;fill:#879db5">${inner}<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#9cacc0" stroke-dasharray="5 5"/><path d="${path('sun')}" fill="none" stroke="#ffbd4a" stroke-width="2.5"/><path d="${path('earth')}" fill="none" stroke="#52e4e9" stroke-width="2.5"/><line x1="${x(current)}" x2="${x(current)}" y1="${pad.t}" y2="${h-pad.b}" stroke="#dbeafa" opacity=".7"/></svg>`;
 }
-function eventText(event){return event?`${event.rising?'Rise':'Set'} ≈ ${dateString(event.time)}`:'No center crossing before '+dayLabel(data.rows.at(-1)[0])+' '+new Date(data.rows.at(-1)[0]).getUTCFullYear();}
+function eventText(event){return event?`${event.rising?'Rise':'Set'} ≈ ${dateString(event.time)} · in ${duration(event.time-time)}`:'No center crossing before '+dayLabel(data.rows.at(-1)[0])+' '+new Date(data.rows.at(-1)[0]).getUTCFullYear();}
 function updateAll(rechart=false){
   const row=atTime(data.rows,time),v=elevations(site,row),sky=skyState(site,row,v);
+  updateMissionTools({data,time,site,row,windowRange});
   $('site-coordinates').textContent=fmtCoord(site);
   for(const key of ['sun','earth']){
     $(key+'-value').textContent=value(v[key]);
@@ -152,7 +155,8 @@ function setTime(t,recenter=true){if(!data||!Number.isFinite(t)||t<data.rows[0][
 $('coordinates').addEventListener('submit',e=>{e.preventDefault();if(e.currentTarget.reportValidity())selectSite({lat:Number($('latitude').value),lon:Number($('longitude').value)})});
 document.querySelectorAll('[data-lat]').forEach(b=>b.addEventListener('click',()=>selectSite({lat:Number(b.dataset.lat),lon:Number(b.dataset.lon)})));
 $('reset-view').addEventListener('click',()=>{if(camera){camera.position.set(3.9,.7,.3);controls.target.set(0,0,0);controls.update()}});
-$('focus-site').addEventListener('click',()=>{if(camera){camera.position.set(...direction(Math.max(-85,Math.min(85,site.lat)),site.lon).map(v=>v*3.9));controls.target.set(0,0,0);controls.update()}});
+function focusSelectedSite(){if(camera){camera.position.set(...direction(Math.max(-85,Math.min(85,site.lat)),site.lon).map(v=>v*3.9));controls.target.set(0,0,0);controls.update()}}
+$('focus-site').addEventListener('click',focusSelectedSite);
 $('pin-site').addEventListener('click',()=>{if(pins.length<2)pins.push({...site});else pins[1]={...site};syncMarkers();updateAll()});
 $('clear-pins').addEventListener('click',()=>{pins=[];syncMarkers();updateAll()});
 $('time-slider').addEventListener('input',e=>setTime(windowRange.start+Number(e.target.value)*3600000,false));
@@ -171,6 +175,7 @@ $('date-time').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefau
 const dialog=$('about');$('help').addEventListener('click',()=>dialog.showModal());$('close-help').addEventListener('click',()=>dialog.close());$('sources-link').addEventListener('click',e=>{e.preventDefault();dialog.showModal()});
 $('play').addEventListener('click',()=>{playing=!playing;$('play').textContent=playing?'Ⅱ':'▶';$('play').setAttribute('aria-label',playing?'Pause time animation':'Play time animation')});
 setInterval(()=>{if(playing&&data)setTime(time+3*3600000>data.rows.at(-1)[0]?data.rows[0][0]:time+3*3600000,false)},250);
+setupMissionTools({selectSite,focusSite:focusSelectedSite,setTime,pause:()=>{playing=false;$('play').textContent='▶';$('play').setAttribute('aria-label','Play time animation')}});
 setupGlobe();
 try{
   const response=await fetch('./data/ephemeris-year.json');if(!response.ok)throw new Error(`Data load failed (${response.status})`);data=await response.json();
