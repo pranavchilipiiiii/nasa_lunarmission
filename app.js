@@ -74,7 +74,7 @@ function syncMarkers(){
   if(!scene)return;
   setPosition(selectedMarker,site);
   for(const marker of pinMarkers){scene.remove(marker);marker.geometry.dispose();marker.material.dispose()}
-  pinMarkers=pins.map((s,i)=>{const marker=makeMarker(i===0?0x1d5c8a:0x9a5b00);setPosition(marker,s);scene.add(marker);return marker});
+  pinMarkers=pins.map((s,i)=>{const marker=makeMarker(i===0?0x6cb8ff:0xffb347);setPosition(marker,s);scene.add(marker);return marker});
 }
 function selectSite(s){site={lat:Math.max(-90,Math.min(90,s.lat)),lon:s.lon};$('latitude').value=site.lat.toFixed(3);$('longitude').value=site.lon.toFixed(3);syncMarkers();if(data){points=series(site,data.rows);updateAll(true)}}
 
@@ -87,9 +87,9 @@ function chartSVG(points,current,mini=false,domain,location=site){
   min=Math.max(-90,Math.floor(min/tickStep)*tickStep);max=Math.min(90,Math.ceil(max/tickStep)*tickStep);if(min===max)max=min+tickStep;
   const x=t=>pad.l+(t-times[0])/(times[1]-times[0])*pw,y=n=>pad.t+(max-n)/(max-min)*ph;
   const path=key=>points.filter((_,i)=>i%3===0||i===points.length-1).map((p,i)=>`${i?'L':'M'}${x(p.time).toFixed(1)},${y(p[key]).toFixed(1)}`).join(' ');
-  let inner='';for(let n=Math.ceil(min/tickStep)*tickStep;n<=max;n+=tickStep){inner+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(n)}" y2="${y(n)}" stroke="#d3c8a9" stroke-width=".7"/><text x="${pad.l-7}" y="${y(n)+3}" text-anchor="end">${n}°</text>`;}
+  let inner='';for(let n=Math.ceil(min/tickStep)*tickStep;n<=max;n+=tickStep){inner+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(n)}" y2="${y(n)}" stroke="#253041" stroke-width=".7"/><text x="${pad.l-7}" y="${y(n)+3}" text-anchor="end">${n}°</text>`;}
   for(let i=0;i<4;i++){const t=times[0]+(times[1]-times[0])*i/3;inner+=`<text x="${x(t)}" y="${h-7}" text-anchor="${i?i===3?'end':'middle':'start'}">${dayLabel(t)}</text>`;}
-  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevation over thirty days for ${fmtCoord(location)}. Horizontal dashed line is zero degrees." style="font:12px 'IBM Plex Sans',Arial,sans-serif;fill:#5b5446">${inner}<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#1c1a14" stroke-dasharray="5 5"/><path d="${path('sun')}" fill="none" stroke="#9a5b00" stroke-width="2.5"/><path d="${path('earth')}" fill="none" stroke="#1d5c8a" stroke-width="2.5"/><line x1="${x(current)}" x2="${x(current)}" y1="${pad.t}" y2="${h-pad.b}" stroke="#1c1a14" opacity=".6"/></svg>`;
+  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevation over thirty days for ${fmtCoord(location)}. Horizontal dashed line is zero degrees." style="font:12px 'IBM Plex Sans',Arial,sans-serif;fill:#8b93a1">${inner}<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#8b93a1" stroke-dasharray="5 5"/><path d="${path('sun')}" fill="none" stroke="#ffb347" stroke-width="2.5"/><path d="${path('earth')}" fill="none" stroke="#6cb8ff" stroke-width="2.5"/><line x1="${x(current)}" x2="${x(current)}" y1="${pad.t}" y2="${h-pad.b}" stroke="#e8e5dc" opacity=".6"/></svg>`;
 }
 function eventText(event){return event?`${event.rising?'Rise':'Set'} ≈ ${dateString(event.time)}`:'No crossing in cached period';}
 function updateAll(rechart=false){
@@ -111,7 +111,7 @@ function updateAll(rechart=false){
   const domain=all.length?[Math.max(-90,Math.floor((Math.min(0,...all)-1)/5)*5),Math.min(90,Math.ceil((Math.max(0,...all)+1)/5)*5)]:undefined;
   for(let i=0;i<2;i++){
     const el=$('compare-'+(i?'b':'a'));
-    if(!pins[i]){el.classList.add('empty');el.innerHTML=`<span class="pin-letter">${i?'B':'A'}</span><h3>${i?'A second perspective':'Your first location'}</h3><p>${i?'Pin another location<br>to explore the trade-offs.':'Select a place on the Moon,<br>then pin it here.'}</p>`;continue;}
+    if(!pins[i]){el.classList.add('empty');el.innerHTML=`<span class="pin-letter">${i?'B':'A'}</span><h3>${i?'Site B':'Site A'}</h3><p>${i?'Pin a second location<br>to compare.':'Click the Moon or enter coordinates,<br>then pin it.'}</p>`;continue;}
     const pin=pins[i],e=elevations(pin,row);el.classList.remove('empty');
     el.innerHTML=`<h3><i class="key ${i?'b':'a'}"></i>Site ${i?'B':'A'}</h3><p class="coord">${fmtCoord(pin)}</p><div class="mini-values"><span class="sun">Sun ${value(e.sun)}</span><span class="earth">Earth ${value(e.earth)}</span></div><div class="mini-chart">${chartSVG(allPinPoints[i],time,true,domain,pin)}</div><p class="micro">Same time range & elevation scale</p>`;
   }

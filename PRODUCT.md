@@ -29,7 +29,7 @@ A 3D Moon you rotate and click to pick any place, with the sunlight and Earth-vi
 ## Brand Commitments
 - The rotatable 3D Moon stays the main interaction on desktop.
 - The two-site comparison (Site A and Site B) stays a core feature.
-- The copy and the data and method notes stay as written unless the team changes them.
+- The data descriptions, limits, and method notes stay. Marketing wording may be removed (changed by the team on request).
 
 ## Evidence on Hand
 - `data/horizons-raw.txt`: the full Horizons response.
