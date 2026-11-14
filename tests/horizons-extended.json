@@ -1,0 +1,195 @@
+{
+  "source": "NASA/JPL Horizons direct surface observer",
+  "retrievedAt": "2026-11-14T18:53:25.153996+00:00",
+  "cases": [
+    {
+      "site": {
+        "lat": 0,
+        "lon": 0
+      },
+      "body": "sun",
+      "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%270%2C0%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461509.8125%2C2461722.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+      "rawFile": "data/validation-extended-raw.json#sun_0_0",
+      "rows": [
+        {
+          "time": "2027-04-14T07:30:00+00:00",
+          "azimuth": 88.604891,
+          "elevation": 4.687714
+        },
+        {
+          "time": "2027-11-13T07:30:00+00:00",
+          "azimuth": 105.58157,
+          "elevation": 84.334132
+        }
+      ]
+    },
+    {
+      "site": {
+        "lat": 0,
+        "lon": 180
+      },
+      "body": "sun",
+      "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27180%2C0%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461509.8125%2C2461722.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+      "rawFile": "data/validation-extended-raw.json#sun_180_0",
+      "rows": [
+        {
+          "time": "2027-04-14T07:30:00+00:00",
+          "azimuth": 271.395109,
+          "elevation": -4.689036
+        },
+        {
+          "time": "2027-11-13T07:30:00+00:00",
+          "azimuth": 254.418424,
+          "elevation": -84.334266
+        }
+      ]
+    },
+    {
+      "site": {
+        "lat": 0,
+        "lon": 180
+      },
+      "body": "earth",
+      "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27180%2C0%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461509.8125%2C2461722.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+      "rawFile": "data/validation-extended-raw.json#earth_180_0",
+      "rows": [
+        {
+          "time": "2027-04-14T07:30:00+00:00",
+          "azimuth": 185.019614,
+          "elevation": -87.830514
+        },
+        {
+          "time": "2027-11-13T07:30:00+00:00",
+          "azimuth": 143.219935,
+          "elevation": -81.847985
+        }
+      ]
+    },
+    {
+      "site": {
+        "lat": -60,
+        "lon": 45
+      },
+      "body": "earth",
+      "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2745%2C-60%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461509.8125%2C2461722.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+      "rawFile": "data/validation-extended-raw.json#earth_45_-60",
+      "rows": [
+        {
+          "time": "2027-04-14T07:30:00+00:00",
+          "azimuth": 310.194916,
+          "elevation": 22.537225
+        },
+        {
+          "time": "2027-11-13T07:30:00+00:00",
+          "azimuth": 303.168255,
+          "elevation": 24.508975
+        }
+      ]
+    },
+    {
+      "site": {
+        "lat": -85,
+        "lon": 30
+      },
+      "body": "earth",
+      "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2730%2C-85%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461509.8125%2C2461722.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+      "rawFile": "data/validation-extended-raw.json#earth_30_-85",
+      "rows": [
+        {
+          "time": "2027-04-14T07:30:00+00:00",
+          "azimuth": 330.00156,
+          "elevation": 6.238881
+        },
+        {
+          "time": "2027-11-13T07:30:00+00:00",
+          "azimuth": 324.640099,
+          "elevation": 10.384127
+        }
+      ]
+    },
+    {
+      "site": {
+        "lat": -88,
+        "lon": 150
+      },
+      "body": "sun",
+      "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27150%2C-88%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461509.8125%2C2461722.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+      "rawFile": "data/validation-extended-raw.json#sun_150_-88",
+      "rows": [
+        {
+          "time": "2027-04-14T07:30:00+00:00",
+          "azimuth": 295.34062,
+          "elevation": -0.535514
+        },
+        {
+          "time": "2027-11-13T07:30:00+00:00",
+          "azimuth": 215.444583,
+          "elevation": -0.110345
+        }
+      ]
+    },
+    {
+      "site": {
+        "lat": -88,
+        "lon": 150
+      },
+      "body": "earth",
+      "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27150%2C-88%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461509.8125%2C2461722.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+      "rawFile": "data/validation-extended-raw.json#earth_150_-88",
+      "rows": [
+        {
+          "time": "2027-04-14T07:30:00+00:00",
+          "azimuth": 210.167869,
+          "elevation": 0.173325
+        },
+        {
+          "time": "2027-11-13T07:30:00+00:00",
+          "azimuth": 204.991756,
+          "elevation": 4.478986
+        }
+      ]
+    },
+    {
+      "site": {
+        "lat": 70,
+        "lon": 100
+      },
+      "body": "earth",
+      "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27100%2C70%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461509.8125%2C2461722.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+      "rawFile": "data/validation-extended-raw.json#earth_100_70",
+      "rows": [
+        {
+          "time": "2027-04-14T07:30:00+00:00",
+          "azimuth": 278.492009,
+          "elevation": -5.65169
+        },
+        {
+          "time": "2027-11-13T07:30:00+00:00",
+          "azimuth": 281.849792,
+          "elevation": -11.483356
+        }
+      ]
+    },
+    {
+      "site": {
+        "lat": -20,
+        "lon": 330
+      },
+      "body": "earth",
+      "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27330%2C-20%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461509.8125%2C2461722.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+      "rawFile": "data/validation-extended-raw.json#earth_330_-20",
+      "rows": [
+        {
+          "time": "2027-04-14T07:30:00+00:00",
+          "azimuth": 62.660201,
+          "elevation": 55.395536
+        },
+        {
+          "time": "2027-11-13T07:30:00+00:00",
+          "azimuth": 64.529861,
+          "elevation": 62.07908
+        }
+      ]
+    }
+  ]
+}

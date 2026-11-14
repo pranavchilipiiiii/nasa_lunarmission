@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {altitude,coordinates,direction,atTime,elevations,nextCrossing} from '../math.mjs';
+import {altitude,coordinates,direction,atTime,elevations,nextCrossing,chartWindow,validateCache} from '../math.mjs';
 const near=(a,b,tol=1e-8)=>assert.ok(Math.abs(a-b)<tol,`${a} != ${b}`);
 // Independent geometric limits: overhead, antipodal, and the finite-distance horizon.
 near(altitude({lat:0,lon:0},0,0),90);
@@ -10,8 +10,13 @@ near(altitude({lat:0,lon:0},90,0,384400),-Math.atan(1737.4/384400)*180/Math.PI);
 for(const s of [{lat:-89,lon:0},{lat:0,lon:85},{lat:42,lon:-170}]){
  const got=coordinates(direction(s.lat,s.lon));near(got.lat,s.lat);near(got.lon,s.lon);
 }
-const cache=JSON.parse(await readFile(new URL('../data/ephemeris.json',import.meta.url)));
-assert.equal(cache.rows.length,721);assert.equal(cache.rows.at(-1)[0]-cache.rows[0][0],30*86400000);
+const cache=JSON.parse(await readFile(new URL('../data/ephemeris-year.json',import.meta.url)));
+assert.equal(cache.rows.length,8761);assert.equal(cache.rows.at(-1)[0]-cache.rows[0][0],365*86400000);
+assert.ok(validateCache(cache.rows));assert.ok(!validateCache(cache.rows.slice(0,700)));
+const broken=cache.rows.map(r=>[...r]);broken[50][0]+=1;assert.ok(!validateCache(broken));
+for(const t of [cache.rows[0][0],Date.parse('2027-04-14T07:30:00Z'),cache.rows.at(-1)[0]]){
+ const w=chartWindow(cache.rows,t);assert.equal(w.end-w.start,30*86400000);assert.ok(t>=w.start&&t<=w.end);assert.ok(w.start>=cache.rows[0][0]&&w.end<=cache.rows.at(-1)[0]);
+}
 const last=atTime(cache.rows,cache.rows.at(-1)[0]);near(last[5],cache.rows.at(-1)[5]);
 assert.throws(()=>atTime(cache.rows,cache.rows[0][0]-1),RangeError);
 // A longitude seam must interpolate across 0°, not across the far side of the Moon.
