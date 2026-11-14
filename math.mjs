@@ -36,3 +36,15 @@ export function nextCrossing(points, time, key) {
   }
   return null;
 }
+
+// A full 30-day chart window, clamped at the boundaries of the available cache.
+export function chartWindow(rows, time) {
+  const span = 30 * 86400000, first = rows[0][0], last = rows.at(-1)[0];
+  const start = Math.max(first, Math.min(last-span, Math.floor((time-span/2)/3600000)*3600000));
+  return {start, end: Math.min(last,start+span)};
+}
+export function validateCache(rows) {
+  return Array.isArray(rows) && rows.length >= 721 && rows.every((row,i)=>
+    Array.isArray(row) && row.length===6 && row.every(Number.isFinite) && row[5]>6378.137 &&
+    (i===0 || row[0]-rows[i-1][0]===3600000));
+}

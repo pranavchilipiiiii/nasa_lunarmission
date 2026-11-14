@@ -9,7 +9,8 @@ Rotate a 3D Moon, click a location, choose a date, and see whether the Sun and E
 Work in progress (hackathon weekend, Nov 14-15, 2026).
 
 The first working starter includes a rotatable/clickable Moon, coordinate entry,
-UTC date controls, real cached NASA/JPL data, elevation cards, 30-day charts,
+UTC date controls spanning one year (`data/ephemeris-year.json`), real cached NASA/JPL data, elevation cards,
+compass directions, disc-visibility estimates, moving 30-day charts,
 two-site comparison, and method/source disclosures. All browser dependencies are
 local. No framework, package install, account, or API key is needed to run it.
 
@@ -17,6 +18,7 @@ The detailed Moon is `assets/moon_lro_web.glb` (5.08 MB, 121,828 triangles,
 4096×2048 WebP texture), converted by Claude from the team-supplied LRO model.
 It preserves the geographic axes and scales to unit outer radius. The original
 textured sphere remains interactive while loading and if the GLB is unavailable.
+An optional HD toggle loads `assets/moon_lro_hd.glb` (18.4 MB, 487,578 triangles, 8K texture). Standard detail remains the default on every device.
 Relief is visual only; elevation calculations still use a smooth reference sphere.
 
 ## Run locally
@@ -46,11 +48,13 @@ updates before pushing. Coordinate edits to `app.js` with the integration owner.
 ```sh
 node tests/math.test.mjs
 node tests/moon-model.test.mjs
+node tests/math-additions.test.mjs
+node tests/extended-validation.test.mjs
 node --check app.js
 python3 scripts/fetch_data.py
 ```
 
-Only the last command needs network access. It replaces the checked-in 30-day
+Only the last command needs network access. Direct reference samples can be refreshed with `python3 scripts/validate_extended.py`; see VALIDATION.md. It replaces the checked-in one-year
 cache and raw response; inspect changes before committing. Python uses its
 standard library. Tests need Node.js 18+.
 
@@ -69,7 +73,7 @@ has been enabled and deployment has completed.
 
 See [SOURCES.md](SOURCES.md) for the exact NASA sources, model assumptions, third-party
 license, collaborator-reported validation, and AI assistance. Supported dates:
-2026-11-14 00:00 through 2026-12-14 00:00 UTC. Terrain shadows, azimuth, eclipses,
+2026-11-14 00:00 through 2027-11-14 00:00 UTC. Terrain shadows, eclipses,
 radio links, generated watts, and thermal conditions are not calculated.
 
 ## Data

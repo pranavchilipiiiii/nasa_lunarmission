@@ -1,11 +1,13 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
-import {direction,coordinates,atTime,elevations,series,nextCrossing} from './math.mjs';
+import {direction,coordinates,atTime,elevations,series,nextCrossing,chartWindow,validateCache} from './math.mjs';
+
+import {skyState} from './math-additions.mjs';
 
 const $ = id => document.getElementById(id);
-let data, time, site={lat:-89,lon:0}, pins=[], points=[], playing=false;
-let scene, camera, renderer, controls, moon, sunlight, selectedMarker, pinMarkers=[];
+let data, time, site={lat:-89,lon:0}, pins=[], points=[], playing=false, windowRange;
+let scene, camera, renderer, controls, moon, sunlight, selectedMarker, pinMarkers=[], modelRequest=0;
 const fmtCoord = s => `${Math.abs(s.lat).toFixed(2)}° ${s.lat<0?'S':'N'} · ${Math.abs(s.lon).toFixed(2)}° ${s.lon<0?'W':'E'}`;
 const value = n => `${n>=0?'+':''}${n.toFixed(2)}°`;
 const dateString = t => new Date(t).toISOString().slice(0,16).replace('T',' ')+' UTC';
@@ -24,25 +26,8 @@ function setupGlobe() {
     controls.rotateSpeed=.6; controls.zoomSpeed=.7;
     const texture=new THREE.TextureLoader().load('./assets/moon.jpg',()=>renderScene()); texture.colorSpace=THREE.SRGBColorSpace;
     moon=new THREE.Mesh(new THREE.SphereGeometry(1,96,64),new THREE.MeshStandardMaterial({map:texture,roughness:1,metalness:0}));scene.add(moon);
-    // Keep the interactive sphere until the detailed model is ready, including on load failure.
-    new GLTFLoader().load('./assets/moon_lro_web.glb',gltf=>{
-      const model=gltf.scene;
-      model.updateMatrixWorld(true);
-      let radius=0;
-      const vertex=new THREE.Vector3();
-      model.traverse(object=>{
-        if(!object.isMesh)return;
-        const positions=object.geometry.attributes.position;
-        for(let i=0;i<positions.count;i++)radius=Math.max(radius,vertex.fromBufferAttribute(positions,i).applyMatrix4(object.matrixWorld).length());
-        for(const material of Array.isArray(object.material)?object.material:[object.material]){material.roughness=1;material.metalness=0;}
-      });
-      if(!Number.isFinite(radius)||radius<=0)return;
-      // Preserve the model origin and axes: +Y north, +X 0 E, -Z 90 E.
-      model.scale.multiplyScalar(1/radius);model.updateMatrixWorld(true);
-      const fallback=moon;scene.remove(fallback);moon=model;scene.add(moon);
-      fallback.geometry.dispose();fallback.material.dispose();texture.dispose();
-      syncMarkers();renderScene();
-    },undefined,error=>console.warn('Detailed Moon unavailable; using textured sphere.',error));
+    loadMoon(false);
+    if(renderer.capabilities.maxTextureSize<8192){$('hd-moon').disabled=true;$('hd-status').textContent='Standard detail · HD needs 8K texture support';}
     scene.add(new THREE.AmbientLight(0xc5d8ec,.28)); sunlight=new THREE.DirectionalLight(0xffffff,3);scene.add(sunlight);
     const gridMaterial=new THREE.LineBasicMaterial({color:0x9bb5cf,transparent:true,opacity:.16});
     function line(vertices){scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(vertices.map(v=>new THREE.Vector3(...v).multiplyScalar(1.003))),gridMaterial));}
@@ -61,6 +46,46 @@ function setupGlobe() {
     renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera)});
   } catch(error){$('globe-error').hidden=false;console.error('Globe unavailable:',error)}
 }
+function disposeMoon(object){
+  object.traverse(child=>{
+    if(!child.isMesh)return;
+    child.geometry.dispose();
+    for(const material of Array.isArray(child.material)?child.material:[child.material]){
+      for(const value of Object.values(material))if(value?.isTexture)value.dispose();
+      material.dispose();
+    }
+  });
+}
+function loadMoon(hd){
+  const request=++modelRequest, button=$('hd-moon');
+  button.disabled=true;$('hd-status').textContent=hd?'Loading HD · 18.4 MB…':'Loading standard detail…';
+  new GLTFLoader().load(hd?'./assets/moon_lro_hd.glb':'./assets/moon_lro_web.glb',gltf=>{
+    const model=gltf.scene;
+    if(request!==modelRequest){disposeMoon(model);return;}
+    model.updateMatrixWorld(true);
+    let radius=0;const vertex=new THREE.Vector3();
+    model.traverse(object=>{
+      if(!object.isMesh)return;
+      const positions=object.geometry.attributes.position;
+      for(let i=0;i<positions.count;i++)radius=Math.max(radius,vertex.fromBufferAttribute(positions,i).applyMatrix4(object.matrixWorld).length());
+      for(const material of Array.isArray(object.material)?object.material:[object.material]){material.roughness=1;material.metalness=0;}
+    });
+    if(!Number.isFinite(radius)||radius<=0){disposeMoon(model);return;}
+    // Preserve all decoded node transforms and the geographic origin/axes.
+    model.scale.multiplyScalar(1/radius);model.updateMatrixWorld(true);
+    const previous=moon;scene.remove(previous);moon=model;scene.add(moon);disposeMoon(previous);
+    button.dataset.hd=String(hd);button.textContent=hd?'Use standard Moon':'Load HD Moon · 18.4 MB';
+    button.disabled=renderer.capabilities.maxTextureSize<8192;
+    $('hd-status').textContent=hd?'HD detail · 8K texture':'Standard detail · 4K texture';
+    syncMarkers();renderScene();
+  },undefined,error=>{
+    if(request!==modelRequest)return;
+    console.warn('Moon detail unavailable; keeping the current view.',error);
+    button.disabled=renderer.capabilities.maxTextureSize<8192;
+    $('hd-status').textContent='Could not load detail. Current Moon remains usable; try again.';
+  });
+}
+$('hd-moon').addEventListener('click',()=>loadMoon($('hd-moon').dataset.hd!=='true'));
 function renderScene(){if(renderer&&scene&&camera)renderer.render(scene,camera)}
 function makeMarker(color,size=.025){return new THREE.Mesh(new THREE.SphereGeometry(size,16,12),new THREE.MeshBasicMaterial({color}));}
 function setPosition(marker,s){
@@ -90,22 +115,27 @@ function chartSVG(points,current,mini=false,domain,location=site){
   for(let i=0;i<4;i++){const t=times[0]+(times[1]-times[0])*i/3;inner+=`<text x="${x(t)}" y="${h-7}" text-anchor="middle">${dayLabel(t)}</text>`;}
   return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevation over thirty days for ${fmtCoord(location)}. Horizontal dashed line is zero degrees." style="font:10px Arial;fill:#879db5">${inner}<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#9cacc0" stroke-dasharray="5 5"/><path d="${path('sun')}" fill="none" stroke="#ffbd4a" stroke-width="2.5"/><path d="${path('earth')}" fill="none" stroke="#52e4e9" stroke-width="2.5"/><line x1="${x(current)}" x2="${x(current)}" y1="${pad.t}" y2="${h-pad.b}" stroke="#dbeafa" opacity=".7"/></svg>`;
 }
-function eventText(event){return event?`${event.rising?'Rise':'Set'} ≈ ${dateString(event.time)}`:'No crossing in cached period';}
+function eventText(event){return event?`${event.rising?'Rise':'Set'} ≈ ${dateString(event.time)}`:'No center crossing before '+dayLabel(data.rows.at(-1)[0])+' '+new Date(data.rows.at(-1)[0]).getUTCFullYear();}
 function updateAll(rechart=false){
-  const row=atTime(data.rows,time),v=elevations(site,row);
+  const row=atTime(data.rows,time),v=elevations(site,row),sky=skyState(site,row,v);
   $('site-coordinates').textContent=fmtCoord(site);
   for(const key of ['sun','earth']){
     $(key+'-value').textContent=value(v[key]);
     const near=Math.abs(v[key])<.3;
-    $(key+'-status').textContent=near?'Near horizon · model sensitive':v[key]>0?(key==='sun'?'Above modeled horizon':'Potential direct visibility'):'Below modeled horizon';
-    $(key+'-status').classList.toggle('near',near);
+    const state=sky[key];
+    $(key+'-status').textContent=state.state==='full'?'Full disc above modeled horizon':state.state==='below'?'Disc below modeled horizon':`Partial disc · ≈${Math.round(state.fraction*100)}% visible area`;
+    $(key+'-status').classList.toggle('near',near||state.state==='partial');
+    const az=state.azimuth;
+    $(key+'-direction').textContent=az===null?'Direction undefined at pole / overhead':`Bearing ${az.toFixed(1)}° · ${['North','Northeast','East','Southeast','South','Southwest','West','Northwest'][Math.round(az/45)%8]}`;
     $(key+'-event').textContent=eventText(nextCrossing(points,time,key));
   }
   $('date-time').value=new Date(time).toISOString().slice(0,16);
-  $('time-slider').value=(time-data.rows[0][0])/3600000;
+  $('time-slider').value=(time-windowRange.start)/3600000;
+  document.querySelectorAll('.ticks span').forEach((el,i)=>el.textContent=dayLabel(windowRange.start+(windowRange.end-windowRange.start)*i/3));
   if(sunlight){sunlight.position.set(...direction(row[4],row[3]).map(v=>v*10));}
-  $('main-chart').innerHTML=chartSVG(points,time);
-  const allPinPoints=pins.map(s=>series(s,data.rows));
+  const visiblePoints=points.filter(p=>p.time>=windowRange.start&&p.time<=windowRange.end);
+  $('main-chart').innerHTML=chartSVG(visiblePoints,time);
+  const allPinPoints=pins.map(s=>series(s,data.rows).filter(p=>p.time>=windowRange.start&&p.time<=windowRange.end));
   const all=allPinPoints.flatMap(a=>a.flatMap(p=>[p.sun,p.earth]));
   const domain=all.length?[Math.max(-90,Math.floor((Math.min(0,...all)-1)/5)*5),Math.min(90,Math.ceil((Math.max(0,...all)+1)/5)*5)]:undefined;
   for(let i=0;i<2;i++){
@@ -117,25 +147,37 @@ function updateAll(rechart=false){
   $('pin-site').textContent=pins.length===0?'＋ Pin as Site A':pins.length===1?'＋ Pin as Site B':'↻ Replace Site B';
   $('clear-pins').disabled=pins.length===0;
 }
-function setTime(t){if(!data||!Number.isFinite(t)||t<data.rows[0][0]||t>data.rows.at(-1)[0])return false;time=t;updateAll();return true;}
+function cacheStatus(){return `NASA/JPL Horizons · ${data.rows.length} hourly samples · ${dateString(data.rows[0][0]).slice(0,10)} – ${dateString(data.rows.at(-1)[0]).slice(0,10)} · simplified model`;}
+function setTime(t,recenter=true){if(!data||!Number.isFinite(t)||t<data.rows[0][0]||t>data.rows.at(-1)[0])return false;time=t;$('load-status').textContent=cacheStatus();if(recenter||!windowRange||t<windowRange.start||t>windowRange.end)windowRange=chartWindow(data.rows,time);updateAll();return true;}
 $('coordinates').addEventListener('submit',e=>{e.preventDefault();if(e.currentTarget.reportValidity())selectSite({lat:Number($('latitude').value),lon:Number($('longitude').value)})});
 document.querySelectorAll('[data-lat]').forEach(b=>b.addEventListener('click',()=>selectSite({lat:Number(b.dataset.lat),lon:Number(b.dataset.lon)})));
 $('reset-view').addEventListener('click',()=>{if(camera){camera.position.set(3.9,.7,.3);controls.target.set(0,0,0);controls.update()}});
 $('focus-site').addEventListener('click',()=>{if(camera){camera.position.set(...direction(Math.max(-85,Math.min(85,site.lat)),site.lon).map(v=>v*3.9));controls.target.set(0,0,0);controls.update()}});
 $('pin-site').addEventListener('click',()=>{if(pins.length<2)pins.push({...site});else pins[1]={...site};syncMarkers();updateAll()});
 $('clear-pins').addEventListener('click',()=>{pins=[];syncMarkers();updateAll()});
-$('time-slider').addEventListener('input',e=>setTime(data.rows[0][0]+Number(e.target.value)*3600000));
-$('date-time').addEventListener('change',e=>{const t=Date.parse(e.target.value+'Z');if(!setTime(t)){$('load-status').textContent='Choose a UTC date between Nov 14 and Dec 14, 2026.';e.target.value=new Date(time).toISOString().slice(0,16)}});
+$('time-slider').addEventListener('input',e=>setTime(windowRange.start+Number(e.target.value)*3600000,false));
+function applyDate(){
+  const input=$('date-time'),t=Date.parse(input.value+'Z');
+  if(!setTime(t)){
+    $('load-status').textContent=`Choose a UTC date between ${dateString(data.rows[0][0])} and ${dateString(data.rows.at(-1)[0])}.`;
+    input.value=new Date(time).toISOString().slice(0,16);
+  }
+}
+// Native date inputs emit change while individual month/day/year segments are edited.
+// Wait for the complete edit before rejecting an out-of-range intermediate value.
+$('date-time').addEventListener('focus',()=>{playing=false;$('play').textContent='▶';$('play').setAttribute('aria-label','Play time animation')});
+$('date-time').addEventListener('blur',applyDate);
+$('date-time').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();e.target.blur()}});
 const dialog=$('about');$('help').addEventListener('click',()=>dialog.showModal());$('close-help').addEventListener('click',()=>dialog.close());$('sources-link').addEventListener('click',e=>{e.preventDefault();dialog.showModal()});
 $('play').addEventListener('click',()=>{playing=!playing;$('play').textContent=playing?'Ⅱ':'▶';$('play').setAttribute('aria-label',playing?'Pause time animation':'Play time animation')});
-setInterval(()=>{if(playing&&data)setTime(time+3*3600000>data.rows.at(-1)[0]?data.rows[0][0]:time+3*3600000)},250);
+setInterval(()=>{if(playing&&data)setTime(time+3*3600000>data.rows.at(-1)[0]?data.rows[0][0]:time+3*3600000,false)},250);
 setupGlobe();
 try{
-  const response=await fetch('./data/ephemeris.json');if(!response.ok)throw new Error(`Data load failed (${response.status})`);data=await response.json();
-  if(data.rows?.length!==721||!data.rows.every(r=>r.length===6&&r.every(Number.isFinite)))throw new Error('Invalid ephemeris cache');
-  time=data.rows[0][0]+240*3600000;
+  const response=await fetch('./data/ephemeris-year.json');if(!response.ok)throw new Error(`Data load failed (${response.status})`);data=await response.json();
+  if(!validateCache(data.rows))throw new Error('Invalid ephemeris cache');
+  time=Math.min(data.rows.at(-1)[0],data.rows[0][0]+10*86400000);windowRange=chartWindow(data.rows,time);
   $('date-time').min=new Date(data.rows[0][0]).toISOString().slice(0,16);$('date-time').max=new Date(data.rows.at(-1)[0]).toISOString().slice(0,16);
   ['date-time','time-slider','play','pin-site'].forEach(id=>$(id).disabled=false);
-  $('load-status').textContent=`NASA/JPL Horizons · ${data.rows.length} hourly samples · Nov 14 – Dec 14, 2026 · simplified model`;
+  $('load-status').textContent=cacheStatus();
   $('query-link').href=data.queryUrl;selectSite(site);
 }catch(error){$('load-status').textContent='Could not load the NASA data. Run this folder through a web server and refresh; see README.';$('load-status').classList.add('error');console.error(error)}
