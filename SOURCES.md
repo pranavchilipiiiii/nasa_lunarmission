@@ -14,8 +14,9 @@ Claude reported comparison against direct surface-observer results for 3 sites a
 No topography, terrain occultation, local slopes, eclipses, radio-link budget, relay coverage, power-system model, or thermal analysis. Earth and Sun centers are used; partial-disc visibility is not modeled. No crossing in the cached period does not mean a body never rises/sets. Event dates are interpolated estimates.
 
 ## Visual assets and libraries
+- Detailed display mesh: `assets/moon_lro_web.glb`, converted by Claude from the team's supplied `Moon_NASA_LRO_8k_Topo.glb`; 121,828 triangles, 4096×2048 WebP color texture, recomputed smooth normals. Original asset download URL/author beyond the LRO filename is still awaiting team confirmation; do not treat the filename alone as verified NASA authorship. The visual mesh is not used for scientific terrain calculations. Its node axes and texture convention match +Y north / +X 0° E / −Z 90° E; tests cover surface picking and size, not landmark survey accuracy. Record the original source before final submission.
 - Moon color map: [NASA SVS CGI Moon Kit](https://svs.gsfc.nasa.gov/4720/), NASA/GSFC/Arizona State University; Lunar Reconnaissance Orbiter Camera. Download: `https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_2k.jpg`. This texture does not implement terrain shadows. See [NASA media usage guidance](https://www.nasa.gov/nasa-brand-center/images-and-media/).
-- [Three.js](https://threejs.org/) 0.170.0 / r170, MIT. Vendored core, OrbitControls, and license in `vendor/`. OrbitControls imports the pinned local core through an import map. No runtime CDN dependency.
+- [Three.js](https://threejs.org/) 0.170.0 / r170, MIT. Vendored core, OrbitControls, GLTFLoader, BufferGeometryUtils, and license in `vendor/`. GLTFLoader's utility import is changed to the neighboring local file. Modules import the pinned local core through an import map. No runtime CDN dependency.
 - UI uses system fonts and text symbols. No NASA logos or implied NASA endorsement.
 
 ## AI assistance

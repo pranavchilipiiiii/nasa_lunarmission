@@ -13,6 +13,12 @@ UTC date controls, real cached NASA/JPL data, elevation cards, 30-day charts,
 two-site comparison, and method/source disclosures. All browser dependencies are
 local. No framework, package install, account, or API key is needed to run it.
 
+The detailed Moon is `assets/moon_lro_web.glb` (5.08 MB, 121,828 triangles,
+4096×2048 WebP texture), converted by Claude from the team-supplied LRO model.
+It preserves the geographic axes and scales to unit outer radius. The original
+textured sphere remains interactive while loading and if the GLB is unavailable.
+Relief is visual only; elevation calculations still use a smooth reference sphere.
+
 ## Run locally
 
 ```sh
@@ -39,6 +45,7 @@ updates before pushing. Coordinate edits to `app.js` with the integration owner.
 
 ```sh
 node tests/math.test.mjs
+node tests/moon-model.test.mjs
 node --check app.js
 python3 scripts/fetch_data.py
 ```

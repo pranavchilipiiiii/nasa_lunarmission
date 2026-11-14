@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
+import { GLTFLoader } from './vendor/GLTFLoader.js';
 import {direction,coordinates,atTime,elevations,series,nextCrossing} from './math.mjs';
 
 const $ = id => document.getElementById(id);
@@ -23,6 +24,25 @@ function setupGlobe() {
     controls.rotateSpeed=.6; controls.zoomSpeed=.7;
     const texture=new THREE.TextureLoader().load('./assets/moon.jpg',()=>renderScene()); texture.colorSpace=THREE.SRGBColorSpace;
     moon=new THREE.Mesh(new THREE.SphereGeometry(1,96,64),new THREE.MeshStandardMaterial({map:texture,roughness:1,metalness:0}));scene.add(moon);
+    // Keep the interactive sphere until the detailed model is ready, including on load failure.
+    new GLTFLoader().load('./assets/moon_lro_web.glb',gltf=>{
+      const model=gltf.scene;
+      model.updateMatrixWorld(true);
+      let radius=0;
+      const vertex=new THREE.Vector3();
+      model.traverse(object=>{
+        if(!object.isMesh)return;
+        const positions=object.geometry.attributes.position;
+        for(let i=0;i<positions.count;i++)radius=Math.max(radius,vertex.fromBufferAttribute(positions,i).applyMatrix4(object.matrixWorld).length());
+        for(const material of Array.isArray(object.material)?object.material:[object.material]){material.roughness=1;material.metalness=0;}
+      });
+      if(!Number.isFinite(radius)||radius<=0)return;
+      // Preserve the model origin and axes: +Y north, +X 0 E, -Z 90 E.
+      model.scale.multiplyScalar(1/radius);model.updateMatrixWorld(true);
+      const fallback=moon;scene.remove(fallback);moon=model;scene.add(moon);
+      fallback.geometry.dispose();fallback.material.dispose();texture.dispose();
+      syncMarkers();renderScene();
+    },undefined,error=>console.warn('Detailed Moon unavailable; using textured sphere.',error));
     scene.add(new THREE.AmbientLight(0xc5d8ec,.28)); sunlight=new THREE.DirectionalLight(0xffffff,3);scene.add(sunlight);
     const gridMaterial=new THREE.LineBasicMaterial({color:0x9bb5cf,transparent:true,opacity:.16});
     function line(vertices){scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(vertices.map(v=>new THREE.Vector3(...v).multiplyScalar(1.003))),gridMaterial));}
@@ -35,7 +55,7 @@ function setupGlobe() {
       if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;
       const rect=renderer.domElement.getBoundingClientRect();
       const ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1),camera);
-      const hit=ray.intersectObject(moon)[0];if(hit)selectSite(coordinates(hit.point.toArray()));
+      const hit=ray.intersectObject(moon,true)[0];if(hit)selectSite(coordinates(hit.point.toArray()));
     });
     new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();}).observe(host);
     renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera)});
@@ -43,7 +63,12 @@ function setupGlobe() {
 }
 function renderScene(){if(renderer&&scene&&camera)renderer.render(scene,camera)}
 function makeMarker(color,size=.025){return new THREE.Mesh(new THREE.SphereGeometry(size,16,12),new THREE.MeshBasicMaterial({color}));}
-function setPosition(marker,s){if(marker)marker.position.set(...direction(s.lat,s.lon).map(v=>v*1.018));}
+function setPosition(marker,s){
+  if(!marker)return;
+  const outward=new THREE.Vector3(...direction(s.lat,s.lon));
+  const hit=moon&&new THREE.Raycaster(outward.clone().multiplyScalar(2),outward.clone().negate()).intersectObject(moon,true)[0];
+  marker.position.copy(outward).multiplyScalar((hit?hit.point.length():1)+.018);
+}
 function syncMarkers(){
   if(!scene)return;
   setPosition(selectedMarker,site);
