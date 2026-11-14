@@ -74,7 +74,7 @@ function syncMarkers(){
   if(!scene)return;
   setPosition(selectedMarker,site);
   for(const marker of pinMarkers){scene.remove(marker);marker.geometry.dispose();marker.material.dispose()}
-  pinMarkers=pins.map((s,i)=>{const marker=makeMarker(i===0?0x52e4e9:0xffbd4a);setPosition(marker,s);scene.add(marker);return marker});
+  pinMarkers=pins.map((s,i)=>{const marker=makeMarker(i===0?0x1d5c8a:0x9a5b00);setPosition(marker,s);scene.add(marker);return marker});
 }
 function selectSite(s){site={lat:Math.max(-90,Math.min(90,s.lat)),lon:s.lon};$('latitude').value=site.lat.toFixed(3);$('longitude').value=site.lon.toFixed(3);syncMarkers();if(data){points=series(site,data.rows);updateAll(true)}}
 
@@ -87,9 +87,9 @@ function chartSVG(points,current,mini=false,domain,location=site){
   min=Math.max(-90,Math.floor(min/tickStep)*tickStep);max=Math.min(90,Math.ceil(max/tickStep)*tickStep);if(min===max)max=min+tickStep;
   const x=t=>pad.l+(t-times[0])/(times[1]-times[0])*pw,y=n=>pad.t+(max-n)/(max-min)*ph;
   const path=key=>points.filter((_,i)=>i%3===0||i===points.length-1).map((p,i)=>`${i?'L':'M'}${x(p.time).toFixed(1)},${y(p[key]).toFixed(1)}`).join(' ');
-  let inner='';for(let n=Math.ceil(min/tickStep)*tickStep;n<=max;n+=tickStep){inner+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(n)}" y2="${y(n)}" stroke="#263548" stroke-width=".7"/><text x="${pad.l-7}" y="${y(n)+3}" text-anchor="end">${n}°</text>`;}
+  let inner='';for(let n=Math.ceil(min/tickStep)*tickStep;n<=max;n+=tickStep){inner+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(n)}" y2="${y(n)}" stroke="#d3c8a9" stroke-width=".7"/><text x="${pad.l-7}" y="${y(n)+3}" text-anchor="end">${n}°</text>`;}
   for(let i=0;i<4;i++){const t=times[0]+(times[1]-times[0])*i/3;inner+=`<text x="${x(t)}" y="${h-7}" text-anchor="${i?i===3?'end':'middle':'start'}">${dayLabel(t)}</text>`;}
-  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevation over thirty days for ${fmtCoord(location)}. Horizontal dashed line is zero degrees." style="font:11px Arial;fill:#879db5">${inner}<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#9cacc0" stroke-dasharray="5 5"/><path d="${path('sun')}" fill="none" stroke="#ffbd4a" stroke-width="2.5"/><path d="${path('earth')}" fill="none" stroke="#52e4e9" stroke-width="2.5"/><line x1="${x(current)}" x2="${x(current)}" y1="${pad.t}" y2="${h-pad.b}" stroke="#dbeafa" opacity=".7"/></svg>`;
+  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevation over thirty days for ${fmtCoord(location)}. Horizontal dashed line is zero degrees." style="font:12px 'IBM Plex Sans',Arial,sans-serif;fill:#5b5446">${inner}<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#1c1a14" stroke-dasharray="5 5"/><path d="${path('sun')}" fill="none" stroke="#9a5b00" stroke-width="2.5"/><path d="${path('earth')}" fill="none" stroke="#1d5c8a" stroke-width="2.5"/><line x1="${x(current)}" x2="${x(current)}" y1="${pad.t}" y2="${h-pad.b}" stroke="#1c1a14" opacity=".6"/></svg>`;
 }
 function eventText(event){return event?`${event.rising?'Rise':'Set'} ≈ ${dateString(event.time)}`:'No crossing in cached period';}
 function updateAll(rechart=false){
