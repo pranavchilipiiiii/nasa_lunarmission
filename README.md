@@ -12,6 +12,4 @@ Work in progress (hackathon weekend, Nov 14-15, 2026).
 
 Sun and Earth positions come from NASA/JPL Horizons. Model: smooth lunar surface; terrain is not included.
 
-## AI use
 
-AI assistants (Claude and ChatGPT Codex) helped with planning, data-method checks and parts of the code. Details are listed in the project submission.
