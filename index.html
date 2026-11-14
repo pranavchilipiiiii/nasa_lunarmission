@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MIDAS — Lunar Site Navigator</title>
+<style>
+:root{--bg:#070d24;--p:#0f1a3d;--ln:#26386f;--mu:#a9b6dc;--cy:#22d3ee;--am:#fbbf24;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:inherit}
+body{margin:0;background:radial-gradient(1100px 560px at 15% -10%,#15275f,var(--bg) 65%) fixed var(--bg);color:#fff;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header,main{max-width:1560px;margin:auto;padding:24px clamp(16px,3vw,40px) 0}
+header{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:clamp(24px,3.2vw,34px);letter-spacing:.02em}h1 b{color:var(--cy)}h1 span{font-weight:400}
+h2{margin:0 0 14px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--cy)}h3{margin:0;font-size:18px}
+.mu{color:var(--mu)}.s{font-size:13px}
+.p{background:var(--p);border:1px solid var(--ln);border-radius:16px;padding:22px;min-width:0}
+.note{border-left:4px solid var(--am);background:#1a2250;padding:14px 18px;border-radius:10px;margin-bottom:24px}
+.app{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;margin-bottom:24px}
+.col{display:flex;flex-direction:column;gap:24px;min-width:0}
+.pill{border:1px solid var(--am);color:var(--am);border-radius:99px;padding:6px 14px;font-size:13px;font-weight:600}
+body[data-mode=cache] .pill{border-color:var(--cy);color:var(--cy)}
+.btn,select,input{font:inherit;color:#fff;background:#16245a;border:1px solid var(--ln);border-radius:10px;padding:8px 14px}
+.btn{cursor:pointer}.btn:hover{border-color:var(--cy)}.sm{padding:3px 10px;font-size:13px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+.row,.rowb{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.rowb{justify-content:space-between}
+.row label{display:flex;flex-direction:column;font-size:13px;color:var(--mu);gap:4px}
+input[type=range]{width:100%;padding:0;margin:18px 0 4px;accent-color:var(--cy)}
+.ends{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-bottom:10px}
+#globe{position:relative;height:min(64vh,540px);min-height:340px;border-radius:12px;overflow:hidden;background:#04081a}
+#globe canvas{display:block}
+.ov{position:absolute;font-size:12px;background:#070d24cc;border-radius:8px;padding:5px 10px;pointer-events:none}
+.tl{top:10px;left:10px}.bl{bottom:10px;left:10px}.br{bottom:10px;right:10px}.tr{top:10px;right:10px;pointer-events:auto;display:flex;gap:10px;align-items:center}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 6px 0 8px}.am{background:var(--am)}.cy{background:var(--cy)}
+.coord{font-size:24px;font-weight:700}
+.ev{margin-top:14px;padding:12px 14px;background:#16245a;border-radius:12px}.ev .v{font-size:22px}.ev b.sun{color:var(--am)}.ev b.earth{color:var(--cy)}.ev .dot{margin-left:0}
+.na{color:var(--am);font-size:16px}
+#chart{width:100%;height:300px;display:block;touch-action:pan-y}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}.cc{background:#12204f;border-radius:12px;padding:18px}.cc.empty{display:flex;flex-direction:column;justify-content:center}.st{margin-top:14px}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:24px}
+a{color:var(--cy)}li{margin-bottom:6px}ol,ul{padding-left:20px;margin:0}
+code{font-size:12px;background:#16245a;padding:1px 5px;border-radius:5px}
+details{margin-top:14px}summary{cursor:pointer;color:var(--cy)}
+.only-sample{display:none}body[data-mode=sample] .only-sample{display:inline-block}
+.tag{background:var(--am);color:#0a1230;font-size:11px;font-weight:700;border-radius:6px;padding:1px 7px;margin-left:8px;letter-spacing:0}
+footer{padding:28px 0 40px}
+@media(max-width:900px){.app{display:flex;flex-direction:column}.col{display:contents}#globeP{order:1}#infoP{order:2}#ctrlP{order:3}#chartP{order:4}.two,.three{grid-template-columns:1fr}#globe{height:min(56vh,420px)}}
+</style></head>
+<body data-mode="loading">
+<header>
+ <div><h1><b>MIDAS</b> <span>— Lunar Site Navigator</span></h1>
+ <div class="mu">Compare lunar locations and dates by sunlight and potential direct-to-Earth visibility.</div></div>
+ <div class="row"><span id="pill" class="pill"></span><button id="smp" class="btn"></button></div>
+</header>
+<main>
+<div class="note"><b>Smooth-surface model; terrain obstruction not included.</b> Earth above the horizon indicates potential direct visibility, not guaranteed communications. Sun elevation is not a full power estimate.</div>
+<div class="app">
+ <div class="col">
+  <section class="p" id="globeP"><h2>Moon</h2>
+   <div id="globe">
+    <div class="ov tl" id="illum"></div>
+    <div class="ov tr"><label class="s"><input type="checkbox" id="gr" checked style="padding:0"> Grid</label><button class="btn sm" id="rv">Reset view</button></div>
+    <div class="ov bl">Drag to rotate · scroll or pinch to zoom · click to select</div>
+    <div class="ov br"><span class="dot am"></span>Subsolar<span class="dot cy"></span>Sub-Earth</div>
+   </div>
+   <p class="mu s" style="margin:12px 0 0">Stylized procedural surface, not NASA imagery. Grid every 30°; longitude is east-positive.</p>
+  </section>
+  <section class="p" id="ctrlP"><h2>Date &amp; time (UTC)</h2>
+   <div class="row"><label>Date<input type="date" id="d"></label><label>Time<input type="time" id="t"></label>
+   <button class="btn" id="now" style="align-self:flex-end">Now (UTC)</button><button class="btn" id="play" style="align-self:flex-end">▶ Play</button></div>
+   <input type="range" id="sl" min="0" max="720" step="1" aria-label="Time within the 30-day window">
+   <div class="ends"><span>Day 0</span><span>Day 15</span><span>Day 30</span></div>
+   <div class="rowb"><b id="tm"></b><span class="mu s" id="rng"></span></div>
+  </section>
+ </div>
+ <div class="col">
+  <section class="p" id="infoP"><h2>Selected location <span class="tag only-sample">ILLUSTRATIVE</span></h2><div id="info"></div></section>
+  <section class="p" id="chartP">
+   <div class="rowb"><h2>Sun &amp; Earth elevation · 30 days <span class="tag only-sample">ILLUSTRATIVE</span></h2>
+   <select id="cs" aria-label="Chart location"><option value="sel">Selected location</option><option value="A">Site A</option><option value="B">Site B</option></select></div>
+   <canvas id="chart" role="img" aria-label="Sun and Earth elevation over 30 days with a zero-degree horizon line"></canvas>
+   <p class="mu s" style="margin:8px 0 0"><span class="dot am" style="margin-left:0"></span>Sun<span class="dot cy"></span>Earth · dashed line = horizon (0°) · click or drag the chart to set the time</p>
+  </section>
+ </div>
+</div>
+<section class="p" id="cmpP"><h2>Compare sites at the same time <span class="tag only-sample">ILLUSTRATIVE</span></h2><div class="two" id="cmp"></div><p class="mu s" id="dl" style="margin:14px 0 0"></p></section>
+<div class="three">
+ <section class="p"><h2>How to use</h2><ol>
+  <li>Drag the Moon to rotate it; scroll or pinch to zoom.</li>
+  <li>Click the surface to select a location. Its latitude and longitude appear in the card.</li>
+  <li>Choose a UTC date and time, drag the 30-day slider, or click the chart. The Moon’s lighting follows the Sun direction for that moment.</li>
+  <li>Read Sun and Earth elevation. Above 0° means above the horizon.</li>
+  <li>Use “Pin as Site A” and “Pin as Site B” on two locations to compare them at the same time.</li></ol></section>
+ <section class="p"><h2>Sources</h2><ul>
+  <li><a href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noopener">NASA/JPL Horizons System</a></li>
+  <li><a href="https://ssd-api.jpl.nasa.gov/doc/horizons.html" target="_blank" rel="noopener">Horizons API documentation</a></li>
+  <li><a href="https://www.spaceappschallenge.org/" target="_blank" rel="noopener">NASA Space Apps Challenge</a></li>
+  <li><a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a> (3D rendering)</li>
+  <li class="mu">Team repository: link to be added by Team MIDAS</li></ul>
+  <details><summary>Developer notes: connecting validated data</summary><p class="mu s">Call <code>MIDAS.setProvider({label,start,end,directions(tMs)})</code>, where <code>start</code>/<code>end</code> are UTC ms and <code>directions</code> returns <code>{sun:[x,y,z],earth:[x,y,z]}</code> unit vectors in the Moon body-fixed frame (X toward mean Earth, Z north). Or serve <code>data/horizons-cache.json</code>: <code>{source,start,stepMinutes,sun:[[x,y,z]…],earth:[[x,y,z]…]}</code>. An optional <code>elevation(latDeg,lonDeg,tMs)→{sun,earth}</code> overrides the default smooth-sphere geometry (elevation = asin of site normal · direction from the Moon’s center). Frame and query details must be confirmed with the data owner.</p></details></section>
+ <section class="p"><h2>AI assistance</h2><p class="mu" style="margin:0">The layout and interface code of this prototype were drafted with Claude (Anthropic) at Team MIDAS’s direction. Claude did not generate any scientific data. Elevations appear only from the team’s validated NASA/JPL Horizons cache and calculation functions once connected; until then values read “Data not connected” or carry an ILLUSTRATIVE label. The Moon texture is procedural, and this build has not yet been validated against Horizons.</p></section>
+</div>
+<footer class="mu s">MIDAS — Lunar Site Navigator · NASA Space Apps Challenge prototype · Not for mission planning.</footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const $=s=>document.querySelector(s),D2R=Math.PI/180,HR=36e5,DAY=864e5,NH=720;
+const iso=t=>new Date(t).toISOString(),fmt=t=>iso(t).slice(0,16).replace("T"," ")+" UTC";
+let prov=null,real=null,status="loading",T=Math.floor(Date.now()/HR)*HR,W=Math.floor(T/DAY)*DAY,sel=null,pins={A:null,B:null},cs="sel",timer=null,memo={};
+let scene,cam,ren,ctl,moon,sunL,amb,grid,mk={};
+const nrm=(a,o)=>[Math.cos(a*D2R)*Math.cos(o*D2R),Math.cos(a*D2R)*Math.sin(o*D2R),Math.sin(a*D2R)];
+const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2],asd=x=>Math.asin(Math.max(-1,Math.min(1,x)))/D2R;
+const inRange=t=>prov&&t>=prov.start&&t<=prov.end;
+function elev(p,t){if(!p||!inRange(t))return null;if(prov.elevation)return prov.elevation(p.lat,p.lon,t);const d=prov.directions(t),n=nrm(p.lat,p.lon);return{sun:asd(dot(n,d.sun)),earth:asd(dot(n,d.earth))}}
+/* Illustrative sample only: simplified circular geometry, no libration/declination, phase not tied to real dates. */
+const S0=Date.UTC(2026,0,1),SMP={label:"Illustrative sample",start:S0,end:Date.UTC(2027,11,31),directions(t){const l=-2*Math.PI*(t-S0)/DAY/29.530589;return{sun:[Math.cos(l),Math.sin(l),0],earth:[1,0,0]}}};
+function fromCache(j){if(!j.start||!j.stepMinutes||!j.sun||!j.earth||j.sun.length<2)throw 0;const s=Date.parse(j.start),st=j.stepMinutes*6e4,N=j.sun.length;
+ const lp=(A,i,f)=>{const a=A[i],b=A[Math.min(i+1,N-1)],v=[0,1,2].map(k=>a[k]+(b[k]-a[k])*f),m=Math.hypot(...v);return v.map(x=>x/m)};
+ return{label:j.source||"Horizons cache",start:s,end:s+(N-1)*st,directions(t){const x=(t-s)/st,i=Math.min(Math.floor(x),N-1);return{sun:lp(j.sun,i,x-i),earth:lp(j.earth,i,x-i)}}}}
+function setStatus(s){status=s;document.body.dataset.mode=s;
+ $("#pill").textContent=s==="cache"?"Cached data · "+prov.label:{loading:"Loading cached data…",none:"Data not connected",sample:"ILLUSTRATIVE SAMPLE — not NASA/JPL data"}[s];
+ $("#smp").textContent=s==="sample"?"Exit sample preview":"Preview illustrative sample";
+ $("#d").min=prov?iso(prov.start).slice(0,10):"";$("#d").max=prov?iso(prov.end).slice(0,10):"";
+ if(prov&&!inRange(T)){T=Math.ceil(prov.start/HR)*HR;W=Math.floor(T/DAY)*DAY}
+ memo={};refresh()}
+async function load(){try{const c=new AbortController();setTimeout(()=>c.abort(),4000);const r=await fetch("data/horizons-cache.json",{signal:c.signal});if(!r.ok)throw 0;real=fromCache(await r.json());if(status!=="sample"){prov=real;setStatus("cache")}}catch(e){if(status!=="sample"){prov=null;setStatus("none")}}}
+window.MIDAS={setProvider(p){real=prov=p;setStatus("cache")}};
+$("#smp").onclick=()=>{if(status==="sample"){prov=real;setStatus(real?"cache":"none")}else{prov=SMP;setStatus("sample")}};
+/* ---------- rendering of cards ---------- */
+const na=m=>`<span class="na">${m}</span>`;
+const ll=p=>`${Math.abs(p.lat).toFixed(2)}° ${p.lat<0?"S":"N"}, ${Math.abs(p.lon).toFixed(2)}° ${p.lon<0?"W":"E"}`;
+function vals(p){const e=elev(p,T);return["sun","earth"].map(k=>{let v,l="";if(!prov)v=na(status==="loading"?"Loading…":"Data not connected");else if(!e)v=na("Unavailable — outside supported range");else{v=`<b class="${k}">${e[k].toFixed(1)}°</b>`;l=k==="sun"?(e.sun>0?"Above horizon — daylight":"Below horizon — night"):(e.earth>0?"Above horizon — potential direct visibility":"Below horizon — no direct line to Earth in this model")}
+ return`<div class="ev"><div><span class="dot ${k==="sun"?"am":"cy"}"></span>${k==="sun"?"Sun":"Earth"} elevation</div><div class="v">${v}</div><div class="mu s">${l}</div></div>`}).join("")}
+function stats(p){if(!prov||!p)return null;const k=`${p.lat.toFixed(3)}|${p.lon.toFixed(3)}|${W}|${status}`;if(memo[k]!==undefined)return memo[k];let n=0,s=0,e=0,b=0;for(let i=0;i<=NH;i++){const v=elev(p,W+i*HR);if(!v)continue;n++;if(v.sun>0)s++;if(v.earth>0)e++;if(v.sun>0&&v.earth>0)b++}return memo[k]=n?{s:s/n,e:e/n,b:b/n}:null}
+function card(k){const p=pins[k];if(!p)return`<div class="cc empty"><h3>Site ${k}</h3><p class="mu" style="margin:6px 0 0">Select a location, then choose “Pin as Site ${k}”.</p></div>`;
+ const s=stats(p),pc=v=>s?Math.round(v*100)+"%":"—";
+ return`<div class="cc"><div class="rowb"><h3>Site ${k}</h3><button class="btn sm" data-clear="${k}">Clear</button></div><div class="coord">${ll(p)}</div>${vals(p)}<div class="mu s st">Share of this 30-day window (model result):<br>Sun above horizon ${pc(s&&s.s)} · Earth above horizon ${pc(s&&s.e)} · both ${pc(s&&s.b)}</div></div>`}
+$("#info").onclick=e=>{const b=e.target.closest("[data-pin]");if(b&&sel){pins[b.dataset.pin]={...sel};refresh()}};
+$("#cmp").onclick=e=>{const b=e.target.closest("[data-clear]");if(b){pins[b.dataset.clear]=null;refresh()}};
+/* ---------- chart ---------- */
+function drawChart(){const cv=$("#chart"),r=cv.getBoundingClientRect();if(!r.width)return;const dpr=devicePixelRatio||1;cv.width=r.width*dpr;cv.height=r.height*dpr;const x=cv.getContext("2d");x.scale(dpr,dpr);
+ const w=r.width,h=r.height,L=44,P=12,B=26,pw=w-L-P,ph=h-P-B,X=t=>L+(t-W)/(NH*HR)*pw,Y=e=>P+(90-e)/180*ph,site=cs==="sel"?sel:pins[cs];
+ x.font="12px system-ui";x.fillStyle="rgba(255,255,255,.05)";x.fillRect(L,Y(0),pw,Y(-90)-Y(0));
+ x.strokeStyle="rgba(169,182,220,.18)";x.fillStyle="#a9b6dc";x.textAlign="right";x.textBaseline="middle";
+ [-90,-45,0,45,90].forEach(e=>{x.beginPath();x.moveTo(L,Y(e));x.lineTo(w-P,Y(e));x.stroke();x.fillText(e+"°",L-6,Y(e))});
+ x.textAlign="center";x.textBaseline="top";for(let d=0;d<=30;d+=5){const t=W+d*DAY;x.fillText(new Date(t).toLocaleDateString("en-US",{month:"short",day:"numeric",timeZone:"UTC"}),Math.min(Math.max(X(t),L+14),w-P-14),h-B+8)}
+ x.setLineDash([6,5]);x.strokeStyle="#fff";x.lineWidth=1.5;x.beginPath();x.moveTo(L,Y(0));x.lineTo(w-P,Y(0));x.stroke();x.setLineDash([]);
+ x.textAlign="left";x.fillStyle="#fff";x.fillText("Horizon (0°)",L+6,Y(0)+4);x.fillStyle="#a9b6dc";x.fillText("Above horizon",L+6,P+4);x.textBaseline="bottom";x.fillText("Below horizon",L+6,h-B-4);
+ const msg=m=>{x.fillStyle="#fbbf24";x.font="16px system-ui";x.textAlign="center";x.textBaseline="middle";x.fillText(m,L+pw/2,P+ph*.28)};
+ if(!prov)return msg(status==="loading"?"Loading cached data…":"Data not connected");
+ if(!site)return msg("Select a location on the Moon");
+ let any=false;x.lineWidth=2.2;
+ [["sun","#fbbf24"],["earth","#22d3ee"]].forEach(([k,c])=>{x.strokeStyle=c;x.beginPath();let pen=false;for(let i=0;i<=240;i++){const t=W+i*3*HR,e=elev(site,t);if(!e){pen=false;continue}any=true;const px=X(t),py=Y(e[k]);pen?x.lineTo(px,py):x.moveTo(px,py);pen=true}x.stroke()});
+ if(!any)return msg("Unavailable — window is outside supported range");
+ if(T>=W&&T<=W+NH*HR){x.strokeStyle="#fff";x.lineWidth=1;x.beginPath();x.moveTo(X(T),P);x.lineTo(X(T),P+ph);x.stroke();const e=elev(site,T);if(e)[["sun","#fbbf24"],["earth","#22d3ee"]].forEach(([k,c])=>{x.fillStyle=c;x.beginPath();x.arc(X(T),Y(e[k]),5,0,7);x.fill()})}}
+const cvs=$("#chart"),scrub=e=>{const r=cvs.getBoundingClientRect(),f=(e.clientX-r.left-44)/(r.width-56);T=W+Math.round(Math.max(0,Math.min(1,f))*NH)*HR;refresh()};
+cvs.onpointerdown=e=>{cvs.setPointerCapture(e.pointerId);scrub(e);cvs.onpointermove=scrub};cvs.onpointerup=()=>cvs.onpointermove=null;
+$("#cs").onchange=e=>{cs=e.target.value;refresh()};addEventListener("resize",drawChart);
+/* ---------- globe ---------- */
+const toS=v=>new THREE.Vector3(v[1],v[2],v[0]),sp=(a,o,r=1)=>toS(nrm(a,o)).multiplyScalar(r);
+function makeTex(){const c=document.createElement("canvas");c.width=1024;c.height=512;const x=c.getContext("2d");let s=7;const R=()=>(s=s*16807%2147483647)/2147483647;
+ x.fillStyle="#8e8e92";x.fillRect(0,0,1024,512);
+ for(let i=0;i<16;i++){const px=R()*1024,py=50+R()*410,r=40+R()*90,g=x.createRadialGradient(px,py,0,px,py,r);g.addColorStop(0,"rgba(50,54,64,.55)");g.addColorStop(1,"rgba(50,54,64,0)");x.fillStyle=g;x.fillRect(px-r,py-r,2*r,2*r)}
+ for(let i=0;i<7000;i++){x.fillStyle=`rgba(${R()>.5?240:30},${R()>.5?240:30},${R()>.5?240:30},.07)`;x.fillRect(R()*1024,R()*512,1+R()*2,1+R()*2)}
+ for(let i=0;i<1100;i++){const px=R()*1024,py=R()*512,r=1.5+Math.pow(R(),3)*24,g=x.createRadialGradient(px,py,r*.2,px,py,r);g.addColorStop(0,"rgba(40,40,46,.35)");g.addColorStop(.8,"rgba(30,30,34,.18)");g.addColorStop(.92,"rgba(238,238,240,.38)");g.addColorStop(1,"rgba(238,238,240,0)");x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill()}
+ return c}
+function tagSprite(t,c){const k=document.createElement("canvas");k.width=k.height=64;const g=k.getContext("2d");g.fillStyle=c;g.beginPath();g.arc(32,32,28,0,7);g.fill();g.fillStyle="#0a1230";g.font="bold 34px system-ui";g.textAlign="center";g.textBaseline="middle";g.fillText(t,32,34);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(k)}));s.scale.set(.1,.1,1);return s}
+function mkr(c,r,t){const g=new THREE.Group();g.add(new THREE.Mesh(new THREE.SphereGeometry(r,16,12),new THREE.MeshBasicMaterial({color:c})));if(t){g.userData.s=tagSprite(t,"#"+c.toString(16).padStart(6,"0"));g.add(g.userData.s)}g.visible=false;scene.add(g);return g}
+function setM(m,p){m.visible=!!p;if(p){m.position.copy(sp(p.lat,p.lon,1.005));if(m.userData.s)m.userData.s.position.copy(m.position.clone().normalize().multiplyScalar(.1))}}
+function initGlobe(){const el=$("#globe");
+ if(!window.THREE||!THREE.OrbitControls){el.insertAdjacentHTML("beforeend",'<p class="na" style="padding:90px 24px;text-align:center">The 3D library could not load. Check your connection and reload.</p>');return}
+ scene=new THREE.Scene();cam=new THREE.PerspectiveCamera(40,1,.1,100);cam.position.set(0,.25,3.6);
+ ren=new THREE.WebGLRenderer({antialias:true});ren.setPixelRatio(Math.min(devicePixelRatio,2));el.prepend(ren.domElement);
+ ctl=new THREE.OrbitControls(cam,ren.domElement);Object.assign(ctl,{enableDamping:true,enablePan:false,minDistance:1.5,maxDistance:7,rotateSpeed:.6,zoomSpeed:.7});ctl.saveState();
+ const tx=new THREE.CanvasTexture(makeTex());
+ moon=new THREE.Mesh(new THREE.SphereGeometry(1,96,64),new THREE.MeshStandardMaterial({map:tx,bumpMap:tx,bumpScale:.9,roughness:1,metalness:0}));scene.add(moon);
+ sunL=new THREE.DirectionalLight(0xfff4e0,1.1);amb=new THREE.AmbientLight(0x1a2448,.5);scene.add(sunL,amb);
+ const gm=new THREE.LineBasicMaterial({color:0x22d3ee,transparent:true,opacity:.35});grid=new THREE.Group();
+ for(let o=-180;o<180;o+=30){const q=[];for(let a=-90;a<=90;a+=3)q.push(sp(a,o,1.004));grid.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(q),gm))}
+ for(let a=-60;a<=60;a+=30){const q=[];for(let o=0;o<=360;o+=3)q.push(sp(a,o,1.004));grid.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(q),gm))}
+ scene.add(grid);
+ const st=[];for(let i=0;i<500;i++){const u=Math.random()*2-1,t=Math.random()*6.283,s=Math.sqrt(1-u*u);st.push(s*Math.cos(t)*40,u*40,s*Math.sin(t)*40)}
+ const sg=new THREE.BufferGeometry();sg.setAttribute("position",new THREE.Float32BufferAttribute(st,3));scene.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0x8fa3d9,size:.12})));
+ mk.sel=mkr(0xffffff,.022);mk.A=mkr(0xc4b5fd,.02,"A");mk.B=mkr(0xfda4af,.02,"B");mk.sun=mkr(0xfbbf24,.03);mk.earth=mkr(0x22d3ee,.03);
+ new ResizeObserver(()=>{const w=el.clientWidth,h=el.clientHeight;ren.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()}).observe(el);
+ const ray=new THREE.Raycaster();let dn=null;
+ ren.domElement.addEventListener("pointerdown",e=>dn=[e.clientX,e.clientY]);
+ ren.domElement.addEventListener("pointerup",e=>{if(!dn||Math.hypot(e.clientX-dn[0],e.clientY-dn[1])>5)return;const r=ren.domElement.getBoundingClientRect();ray.setFromCamera(new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1),cam);const h=ray.intersectObject(moon)[0];if(h){const p=h.point.clone().normalize();sel={lat:Math.asin(p.y)/D2R,lon:Math.atan2(p.x,p.z)/D2R};refresh()}});
+ $("#gr").onchange=e=>grid.visible=e.target.checked;$("#rv").onclick=()=>ctl.reset();
+ (function loop(){requestAnimationFrame(loop);ctl.update();ren.render(scene,cam)})()}
+function updateGlobe(){if(!scene)return;setM(mk.sel,sel);setM(mk.A,pins.A);setM(mk.B,pins.B);
+ if(prov&&prov.directions&&inRange(T)){const d=prov.directions(T);sunL.position.copy(toS(d.sun).multiplyScalar(10));sunL.intensity=1.7;amb.intensity=.22;
+  mk.sun.visible=mk.earth.visible=true;mk.sun.position.copy(toS(d.sun).multiplyScalar(1.01));mk.earth.position.copy(toS(d.earth).multiplyScalar(1.01));
+  $("#illum").textContent="Lighting: Sun direction at "+fmt(T)+(status==="sample"?" (illustrative)":"")}
+ else{sunL.position.set(3,1.5,4);sunL.intensity=1.1;amb.intensity=.5;mk.sun.visible=mk.earth.visible=false;
+  $("#illum").textContent=prov?"Lighting unavailable: outside supported range":"Lighting not tied to a date: data not connected"}}
+/* ---------- controls ---------- */
+function refresh(){const d=iso(T);$("#d").value=d.slice(0,10);$("#t").value=d.slice(11,16);
+ const h=(T-W)/HR;$("#sl").value=Math.max(0,Math.min(NH,Math.round(h)));
+ $("#tm").textContent=fmt(T)+(h>=0&&h<=NH?` · day ${(h/24).toFixed(1)} of 30`:" · outside slider window");
+ $("#rng").textContent=prov?`Supported dates: ${iso(prov.start).slice(0,10)} → ${iso(prov.end).slice(0,10)}`:status==="loading"?"Loading cached data…":"Supported dates: — (data not connected)";
+ $("#info").innerHTML=sel?`<div class="coord">${ll(sel)}</div><div class="mu s">Selenographic latitude / longitude · ${fmt(T)}</div>${vals(sel)}<div class="row" style="margin-top:16px"><button class="btn" data-pin="A">Pin as Site A</button><button class="btn" data-pin="B">Pin as Site B</button></div>`:`<p class="mu" style="margin:0">Click the Moon to select a location. Its latitude, longitude, and Sun/Earth elevation will appear here.</p>`;
+ $("#cmp").innerHTML=card("A")+card("B");
+ const a=elev(pins.A,T),b=elev(pins.B,T);$("#dl").textContent=a&&b?`At ${fmt(T)}: Sun elevation A − B = ${(a.sun-b.sun).toFixed(1)}° · Earth elevation A − B = ${(a.earth-b.earth).toFixed(1)}°`:"";
+ drawChart();updateGlobe()}
+$("#d").onchange=e=>{if(!e.target.value)return;const tod=((T%DAY)+DAY)%DAY;W=Date.parse(e.target.value+"T00:00:00Z");T=W+tod;refresh()};
+$("#t").onchange=e=>{if(!e.target.value)return;const[h,m]=e.target.value.split(":").map(Number);T=Math.floor(T/DAY)*DAY+(h*60+m)*6e4;refresh()};
+$("#sl").oninput=e=>{T=W+ +e.target.value*HR;refresh()};
+$("#now").onclick=()=>{T=Math.floor(Date.now()/HR)*HR;W=Math.floor(T/DAY)*DAY;refresh()};
+$("#play").onclick=()=>{if(timer){clearInterval(timer);timer=null;$("#play").textContent="▶ Play"}else{$("#play").textContent="❚❚ Pause";timer=setInterval(()=>{T+=3*HR;if(T>W+NH*HR)T=W;refresh()},100)}};
+initGlobe();setStatus("loading");load();
+</script>
+</body></html>
