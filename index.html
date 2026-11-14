@@ -19,7 +19,7 @@
         <div id="globe" aria-label="Interactive lunar globe. Use the coordinate fields below as a keyboard alternative."><div class="globe-tag"><span class="dot sun"></span>Sunlight changes with your date</div><div id="globe-error" hidden>3D view unavailable. You can still explore using the coordinate fields below.</div></div>
         <div class="globe-hint"><span>↔ Drag to orbit</span><span>⌖ Click to select</span><span>⊕ Scroll to zoom</span></div>
         <form id="coordinates" class="coordinate-form"><label>Latitude <input id="latitude" type="number" min="-90" max="90" step="any" value="-89" required></label><label>Longitude <input id="longitude" type="number" min="-180" max="180" step="any" value="0" required></label><button type="submit">Go to site ↗</button></form>
-        <div class="presets" aria-label="Example locations"><button data-lat="-89" data-lon="0">South polar example</button><button data-lat="0.674" data-lon="23.473">Apollo 11</button><button data-lat="0" data-lon="85">Near limb</button></div>
+        <div class="presets" aria-label="Example locations"><button data-lat="-89" data-lon="0">South polar example</button><button data-lat="0.674" data-lon="23.473">Apollo 11</button><button data-lat="0" data-lon="85">Near limb</button><button id="focus-site">Focus selected site ⌖</button></div>
       </section>
       <aside class="data-column">
         <section class="panel site-panel"><div class="panel-head"><div><span class="eyebrow">02 / UNDERSTAND</span><h2>Selected site</h2></div><span id="site-coordinates" class="coordinate-chip">89.00° S · 0.00° E</span></div>

@@ -57,10 +57,11 @@ function chartSVG(points,current,mini=false,domain,location=site){
   const times=[points[0].time,points.at(-1).time];
   const all=points.flatMap(p=>[p.sun,p.earth]);
   let min=domain?.[0]??Math.floor((Math.min(0,...all)-1)/5)*5,max=domain?.[1]??Math.ceil((Math.max(0,...all)+1)/5)*5;
-  min=Math.max(-90,min);max=Math.min(90,max);if(min===max)max=min+5;
+  const tickStep=[1,2,5,10,15,30,45,90].find(step=>step>=(max-min)/4)||90;
+  min=Math.max(-90,Math.floor(min/tickStep)*tickStep);max=Math.min(90,Math.ceil(max/tickStep)*tickStep);if(min===max)max=min+tickStep;
   const x=t=>pad.l+(t-times[0])/(times[1]-times[0])*pw,y=n=>pad.t+(max-n)/(max-min)*ph;
   const path=key=>points.filter((_,i)=>i%3===0||i===points.length-1).map((p,i)=>`${i?'L':'M'}${x(p.time).toFixed(1)},${y(p[key]).toFixed(1)}`).join(' ');
-  let inner='';for(let i=0;i<=4;i++){const n=min+(max-min)*i/4;inner+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(n)}" y2="${y(n)}" stroke="#263548" stroke-width=".7"/><text x="${pad.l-7}" y="${y(n)+3}" text-anchor="end">${Math.round(n)}°</text>`;}
+  let inner='';for(let n=Math.ceil(min/tickStep)*tickStep;n<=max;n+=tickStep){inner+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(n)}" y2="${y(n)}" stroke="#263548" stroke-width=".7"/><text x="${pad.l-7}" y="${y(n)+3}" text-anchor="end">${n}°</text>`;}
   for(let i=0;i<4;i++){const t=times[0]+(times[1]-times[0])*i/3;inner+=`<text x="${x(t)}" y="${h-7}" text-anchor="middle">${dayLabel(t)}</text>`;}
   return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevation over thirty days for ${fmtCoord(location)}. Horizontal dashed line is zero degrees." style="font:10px Arial;fill:#879db5">${inner}<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#9cacc0" stroke-dasharray="5 5"/><path d="${path('sun')}" fill="none" stroke="#ffbd4a" stroke-width="2.5"/><path d="${path('earth')}" fill="none" stroke="#52e4e9" stroke-width="2.5"/><line x1="${x(current)}" x2="${x(current)}" y1="${pad.t}" y2="${h-pad.b}" stroke="#dbeafa" opacity=".7"/></svg>`;
 }
@@ -95,6 +96,7 @@ function setTime(t){if(!data||!Number.isFinite(t)||t<data.rows[0][0]||t>data.row
 $('coordinates').addEventListener('submit',e=>{e.preventDefault();if(e.currentTarget.reportValidity())selectSite({lat:Number($('latitude').value),lon:Number($('longitude').value)})});
 document.querySelectorAll('[data-lat]').forEach(b=>b.addEventListener('click',()=>selectSite({lat:Number(b.dataset.lat),lon:Number(b.dataset.lon)})));
 $('reset-view').addEventListener('click',()=>{if(camera){camera.position.set(3.9,.7,.3);controls.target.set(0,0,0);controls.update()}});
+$('focus-site').addEventListener('click',()=>{if(camera){camera.position.set(...direction(Math.max(-85,Math.min(85,site.lat)),site.lon).map(v=>v*3.9));controls.target.set(0,0,0);controls.update()}});
 $('pin-site').addEventListener('click',()=>{if(pins.length<2)pins.push({...site});else pins[1]={...site};syncMarkers();updateAll()});
 $('clear-pins').addEventListener('click',()=>{pins=[];syncMarkers();updateAll()});
 $('time-slider').addEventListener('input',e=>setTime(data.rows[0][0]+Number(e.target.value)*3600000));
