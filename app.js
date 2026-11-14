@@ -10,6 +10,7 @@ const fmtCoord = s => `${Math.abs(s.lat).toFixed(2)}° ${s.lat<0?'S':'N'} · ${M
 const value = n => `${n>=0?'+':''}${n.toFixed(2)}°`;
 const dateString = t => new Date(t).toISOString().slice(0,16).replace('T',' ')+' UTC';
 const dayLabel = t => new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',timeZone:'UTC'}).format(t);
+const PLAY_ICON='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4L13 8z" fill="currentColor"/></svg>',PAUSE_ICON='<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3.2" height="11" fill="currentColor"/><rect x="9.3" y="2.5" width="3.2" height="11" fill="currentColor"/></svg>';
 
 function setupGlobe() {
   try {
@@ -87,8 +88,8 @@ function chartSVG(points,current,mini=false,domain,location=site){
   const x=t=>pad.l+(t-times[0])/(times[1]-times[0])*pw,y=n=>pad.t+(max-n)/(max-min)*ph;
   const path=key=>points.filter((_,i)=>i%3===0||i===points.length-1).map((p,i)=>`${i?'L':'M'}${x(p.time).toFixed(1)},${y(p[key]).toFixed(1)}`).join(' ');
   let inner='';for(let n=Math.ceil(min/tickStep)*tickStep;n<=max;n+=tickStep){inner+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(n)}" y2="${y(n)}" stroke="#263548" stroke-width=".7"/><text x="${pad.l-7}" y="${y(n)+3}" text-anchor="end">${n}°</text>`;}
-  for(let i=0;i<4;i++){const t=times[0]+(times[1]-times[0])*i/3;inner+=`<text x="${x(t)}" y="${h-7}" text-anchor="middle">${dayLabel(t)}</text>`;}
-  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevation over thirty days for ${fmtCoord(location)}. Horizontal dashed line is zero degrees." style="font:10px Arial;fill:#879db5">${inner}<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#9cacc0" stroke-dasharray="5 5"/><path d="${path('sun')}" fill="none" stroke="#ffbd4a" stroke-width="2.5"/><path d="${path('earth')}" fill="none" stroke="#52e4e9" stroke-width="2.5"/><line x1="${x(current)}" x2="${x(current)}" y1="${pad.t}" y2="${h-pad.b}" stroke="#dbeafa" opacity=".7"/></svg>`;
+  for(let i=0;i<4;i++){const t=times[0]+(times[1]-times[0])*i/3;inner+=`<text x="${x(t)}" y="${h-7}" text-anchor="${i?i===3?'end':'middle':'start'}">${dayLabel(t)}</text>`;}
+  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevation over thirty days for ${fmtCoord(location)}. Horizontal dashed line is zero degrees." style="font:11px Arial;fill:#879db5">${inner}<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#9cacc0" stroke-dasharray="5 5"/><path d="${path('sun')}" fill="none" stroke="#ffbd4a" stroke-width="2.5"/><path d="${path('earth')}" fill="none" stroke="#52e4e9" stroke-width="2.5"/><line x1="${x(current)}" x2="${x(current)}" y1="${pad.t}" y2="${h-pad.b}" stroke="#dbeafa" opacity=".7"/></svg>`;
 }
 function eventText(event){return event?`${event.rising?'Rise':'Set'} ≈ ${dateString(event.time)}`:'No crossing in cached period';}
 function updateAll(rechart=false){
@@ -112,9 +113,9 @@ function updateAll(rechart=false){
     const el=$('compare-'+(i?'b':'a'));
     if(!pins[i]){el.classList.add('empty');el.innerHTML=`<span class="pin-letter">${i?'B':'A'}</span><h3>${i?'A second perspective':'Your first location'}</h3><p>${i?'Pin another location<br>to explore the trade-offs.':'Select a place on the Moon,<br>then pin it here.'}</p>`;continue;}
     const pin=pins[i],e=elevations(pin,row);el.classList.remove('empty');
-    el.innerHTML=`<h3><span style="color:${i?'#ffbd4a':'#52e4e9'}">●</span> Site ${i?'B':'A'}</h3><p class="coord">${fmtCoord(pin)}</p><div class="mini-values"><span class="sun">☀ ${value(e.sun)}</span><span class="earth">◉ ${value(e.earth)}</span></div><div class="mini-chart">${chartSVG(allPinPoints[i],time,true,domain,pin)}</div><p class="micro">Same time range & elevation scale</p>`;
+    el.innerHTML=`<h3><i class="key ${i?'b':'a'}"></i>Site ${i?'B':'A'}</h3><p class="coord">${fmtCoord(pin)}</p><div class="mini-values"><span class="sun">Sun ${value(e.sun)}</span><span class="earth">Earth ${value(e.earth)}</span></div><div class="mini-chart">${chartSVG(allPinPoints[i],time,true,domain,pin)}</div><p class="micro">Same time range & elevation scale</p>`;
   }
-  $('pin-site').textContent=pins.length===0?'＋ Pin as Site A':pins.length===1?'＋ Pin as Site B':'↻ Replace Site B';
+  $('pin-site').textContent=pins.length===0?'Pin as Site A':pins.length===1?'Pin as Site B':'Replace Site B';
   $('clear-pins').disabled=pins.length===0;
 }
 function setTime(t){if(!data||!Number.isFinite(t)||t<data.rows[0][0]||t>data.rows.at(-1)[0])return false;time=t;updateAll();return true;}
@@ -127,7 +128,7 @@ $('clear-pins').addEventListener('click',()=>{pins=[];syncMarkers();updateAll()}
 $('time-slider').addEventListener('input',e=>setTime(data.rows[0][0]+Number(e.target.value)*3600000));
 $('date-time').addEventListener('change',e=>{const t=Date.parse(e.target.value+'Z');if(!setTime(t)){$('load-status').textContent='Choose a UTC date between Nov 14 and Dec 14, 2026.';e.target.value=new Date(time).toISOString().slice(0,16)}});
 const dialog=$('about');$('help').addEventListener('click',()=>dialog.showModal());$('close-help').addEventListener('click',()=>dialog.close());$('sources-link').addEventListener('click',e=>{e.preventDefault();dialog.showModal()});
-$('play').addEventListener('click',()=>{playing=!playing;$('play').textContent=playing?'Ⅱ':'▶';$('play').setAttribute('aria-label',playing?'Pause time animation':'Play time animation')});
+$('play').addEventListener('click',()=>{playing=!playing;$('play').innerHTML=playing?PAUSE_ICON:PLAY_ICON;$('play').setAttribute('aria-label',playing?'Pause time animation':'Play time animation')});
 setInterval(()=>{if(playing&&data)setTime(time+3*3600000>data.rows.at(-1)[0]?data.rows[0][0]:time+3*3600000)},250);
 setupGlobe();
 try{
