@@ -41,12 +41,6 @@ export function simpleEstimates(elevation,{horizon=0,area=1,efficiency=25,absorp
   const heat=incident*absorptivity;
   return {incident,power:incident*area*efficiency/100,heat,temperatureK:heat>0?(heat/(emissivity*5.670374419e-8))**.25:null,visible};
 }
-export function phaseDiscSVG(fraction,waxing=true,label='Moon phase schematic'){
-  const points=[],steps=60;
-  for(let i=0;i<=steps;i++){const y=-1+2*i/steps,r=Math.sqrt(Math.max(0,1-y*y));points.push([waxing?r:-r,y]);}
-  for(let i=steps;i>=0;i--){const y=-1+2*i/steps,r=Math.sqrt(Math.max(0,1-y*y));points.push([(waxing?1:-1)*(1-2*fraction)*r,y]);}
-  return `<svg viewBox="0 0 120 120" role="img" aria-label="${label}"><circle cx="60" cy="60" r="51" fill="#111d2c" stroke="#53677c"/><polygon points="${points.map(([x,y])=>`${60+50*x},${60+50*y}`).join(' ')}" fill="#e3e9ef"/></svg>`;
-}
 export function duration(milliseconds){
   const minutes=Math.max(0,Math.round(milliseconds/60000)),days=Math.floor(minutes/1440),hours=Math.floor(minutes%1440/60),mins=minutes%60;
   return [days?`${days}d`:'',hours?`${hours}h`:'',mins||(!days&&!hours)?`${mins}m`:''].filter(Boolean).join(' ');

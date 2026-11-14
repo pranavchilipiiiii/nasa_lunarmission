@@ -1,7 +1,8 @@
 // Team-requested cycle, comparison and simplified mission scenarios.
 import {atTime,elevations,series,nextCrossing} from './math.mjs';
 import {skyState} from './math-additions.mjs';
-import {lunarCycle,illuminatedFraction,phaseDiscSVG,visibilityWindows,simpleEstimates,duration,DAY_MS} from './mission.mjs';
+import {lunarCycle,illuminatedFraction,visibilityWindows,simpleEstimates,duration,DAY_MS} from './mission.mjs';
+import {renderPhaseMoon} from './phase-moon.js';
 const $=id=>document.getElementById(id);
 const stamp=t=>new Date(t).toISOString().slice(0,16).replace('T',' ')+' UTC';
 const coord=s=>`${Math.abs(s.lat).toFixed(2)}° ${s.lat<0?'S':'N'}, ${Math.abs(s.lon).toFixed(2)}° ${s.lon<0?'W':'E'}`;
@@ -41,7 +42,7 @@ function render(){if(!state)return;if(active==='cycle')renderCycle();if(active==
 function renderCycle(){
  const cycle=lunarCycle(phases,state.time);if(!cycle)return;
  const fraction=illuminatedFraction(state.row);
- $('phase-picture').innerHTML=phaseDiscSVG(fraction,cycle.waxing,`${cycle.name}, approximately ${(fraction*100).toFixed(1)} percent illuminated`);
+ renderPhaseMoon($('phase-picture'),state.row,`${cycle.name}, approximately ${(fraction*100).toFixed(1)} percent illuminated`);
  $('phase-name').textContent=cycle.name;$('phase-fraction').textContent=`≈${(fraction*100).toFixed(1)}% illuminated`;
  $('phase-age').textContent=`${cycle.ageDays.toFixed(1)} Earth days since new Moon · this cycle ${cycle.periodDays.toFixed(2)} days`;
  $('phase-progress').value=cycle.progress*100;
