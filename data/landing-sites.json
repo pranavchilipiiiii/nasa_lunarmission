@@ -1,0 +1,112 @@
+{
+  "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html",
+  "coordinateFrame": "Planetocentric mean Earth/polar axis; east-positive longitudes; rounded source coordinates",
+  "retrievedAt": "2026-11-14T19:58:34.000509+00:00",
+  "sites": [
+    {
+      "name": "Apollo 11",
+      "lat": 0.67416,
+      "lon": 23.47314,
+      "group": "Apollo",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Apollo 12",
+      "lat": -3.0128,
+      "lon": -23.4219,
+      "group": "Apollo",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Apollo 14",
+      "lat": -3.64589,
+      "lon": -17.47194,
+      "group": "Apollo",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Apollo 15",
+      "lat": 26.13239,
+      "lon": 3.6333,
+      "group": "Apollo",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Apollo 16",
+      "lat": -8.9734,
+      "lon": 15.5011,
+      "group": "Apollo",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Apollo 17",
+      "lat": 20.1911,
+      "lon": 30.7723,
+      "group": "Apollo",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Chang\u2019e 3",
+      "lat": 44.1214,
+      "lon": -19.5117,
+      "group": "International",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Chang\u2019e 4",
+      "lat": -45.4561,
+      "lon": 177.5885,
+      "group": "International",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Chang\u2019e 5",
+      "lat": 43.0576,
+      "lon": -51.9161,
+      "group": "International",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Chang\u2019e 6",
+      "lat": -41.6385,
+      "lon": -153.9852,
+      "group": "International",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Chandrayaan-3",
+      "lat": -69.3741,
+      "lon": 32.32,
+      "group": "International",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "SLIM",
+      "lat": -13.316,
+      "lon": 25.251,
+      "group": "International",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Odysseus \u00b7 IM-1",
+      "lat": -80.13,
+      "lon": 1.44,
+      "group": "CLPS",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Blue Ghost 1",
+      "lat": 18.562,
+      "lon": 61.81,
+      "group": "CLPS",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    },
+    {
+      "name": "Intuitive Machines 2",
+      "lat": -84.7906,
+      "lon": 29.1957,
+      "group": "CLPS",
+      "source": "https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html"
+    }
+  ]
+}
