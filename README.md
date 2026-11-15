@@ -111,4 +111,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch workflow, file ownership, 
 
 ## AI use
 
-This project was built with AI assistance (Claude and Codex). They helped with research, information gathering, visual design, and image creation.
+This project was built with AI assistance (Claude and Codex). They helped with research, information gathering, coding assistance, debugging, troubleshooting, visual design, and image creation.
