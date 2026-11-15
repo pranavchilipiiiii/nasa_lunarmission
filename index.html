@@ -4,9 +4,9 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Explore the Moon. Compare sunlight and potential Earth visibility using NASA/JPL Horizons data.">
   <title>MIDAS — Lunar Site Navigator</title>
-  <link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css?v=20261115-qa">
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css?v=20261115-pins">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=20261115-pins"></script>
 </head>
 <body>
   <header class="topbar"><a class="brand" href="./" aria-label="MIDAS home">MIDAS<span class="divider"></span><span class="brand-sub">Lunar Site Navigator</span></a><div class="header-actions"><span class="live"><i></i> NASA DATA</span><button id="help">How it works</button></div></header>
@@ -28,7 +28,7 @@
         <section class="panel site-panel"><div class="panel-head"><div><h2>Selected site</h2></div><span id="site-coordinates" class="coordinate-chip">89.00° S · 0.00° E</span></div>
           <div class="metrics"><article><span class="metric-label"><i class="key sun"></i>Sun elevation</span><strong id="sun-value">n/a</strong><span id="sun-status" class="status">Awaiting data</span><span id="sun-direction" class="sky-detail">n/a</span></article><article><span class="metric-label"><i class="key earth"></i>Earth elevation</span><strong id="earth-value">n/a</strong><span id="earth-status" class="status">Awaiting data</span><span id="earth-direction" class="sky-detail">n/a</span></article></div>
           <div class="events"><p><span>Next Sun center crossing</span><b id="sun-event">n/a</b></p><p><span>Next Earth center crossing</span><b id="earth-event">n/a</b></p></div>
-          <button id="pin-site" class="primary" disabled>Pin as Site A</button><p class="micro">Geometric visibility, not a landing-safety assessment.</p>
+          <div class="pin-actions" role="group" aria-label="Save selected location for comparison"><button id="pin-site" class="primary" disabled>Pin as Site A</button><button id="pin-site-b" class="primary" disabled>Pin as Site B</button></div><p id="pin-status" class="micro pin-status" role="status">Choose a location, then pin it as Site A. Choose another location for Site B.</p><p class="micro">Geometric visibility, not a landing-safety assessment.</p>
         </section>
         <section class="panel chart-panel"><div class="panel-head"><div><h2>Elevation over 30 days</h2></div><span class="chart-unit">Elevation (°)</span></div><div class="legend"><span><i class="sun-bg"></i>Sun</span><span><i class="earth-bg"></i>Earth</span><span><i class="horizon-key"></i>Horizon</span></div><div id="main-chart" class="chart" aria-live="off"></div><p class="micro">Moving 30-day window · hourly samples · UTC</p></section>
       </aside>

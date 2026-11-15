@@ -77,3 +77,8 @@ dialog{background:rgba(10,18,30,.72);backdrop-filter:blur(28px);-webkit-backdrop
 /* Keep source and model limits readable over the photographic background. */
 .intro{gap:24px}
 .intro p,.load-status{color:#eaf4ff;background:rgba(4,9,16,.82);padding:8px 12px;border-radius:8px}
+
+/* Keep both comparison actions visible instead of changing one button's role. */
+.pin-actions{display:flex;gap:10px;margin:5px 24px 0}
+.pin-actions .primary{flex:1;min-width:0;width:auto;margin:0}
+.site-panel .pin-status{text-align:left;color:#dbe9f6;line-height:1.6}

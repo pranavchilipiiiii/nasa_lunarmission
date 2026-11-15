@@ -147,7 +147,11 @@ function updateAll(rechart=false){
     const pin=pins[i],e=elevations(pin,row);el.classList.remove('empty');
     el.innerHTML=`<h3><span style="color:${i?'#ffbd4a':'#52e4e9'}">●</span> Site ${i?'B':'A'}</h3><p class="coord">${fmtCoord(pin)}</p><div class="mini-values"><span class="sun">Sun ${value(e.sun)}</span><span class="earth">Earth ${value(e.earth)}</span></div><div class="mini-chart">${chartSVG(allPinPoints[i],time,true,domain,pin)}</div><p class="micro">Same time range & elevation scale</p>`;
   }
-  $('pin-site').textContent=pins.length===0?'Pin as Site A':pins.length===1?'Pin as Site B':'Replace Site B';
+  $('pin-site').textContent=pins[0]?'Replace Site A':'Pin as Site A';
+  $('pin-site-b').textContent=pins[1]?'Replace Site B':'Pin as Site B';
+  $('pin-site-b').disabled=!pins[0];
+  const pinStatus=pins[1]?`Both sites saved. A: ${fmtCoord(pins[0])}; B: ${fmtCoord(pins[1])}. Select another location and replace either site.`:pins[0]?`Site A saved: ${fmtCoord(pins[0])}. Now choose a different location on the Moon, in the catalog, or using coordinates, then pin it as Site B.`:'Choose a location, then pin it as Site A. Choose another location for Site B.';
+  if($('pin-status').textContent!==pinStatus)$('pin-status').textContent=pinStatus;
   $('clear-pins').disabled=pins.length===0;
 }
 function cacheStatus(){return `NASA/JPL Horizons · ${data.rows.length} hourly samples · ${dateString(data.rows[0][0]).slice(0,10)} – ${dateString(data.rows.at(-1)[0]).slice(0,10)} · data retrieved ${String(data.retrievedAt||'').slice(0,10)} · simplified model`;}
@@ -157,7 +161,8 @@ document.querySelectorAll('[data-lat]').forEach(b=>b.addEventListener('click',()
 $('reset-view').addEventListener('click',()=>{if(camera){camera.position.set(3.9,.7,.3);controls.target.set(0,0,0);controls.update()}});
 function focusSelectedSite(){if(camera){camera.position.set(...direction(Math.max(-85,Math.min(85,site.lat)),site.lon).map(v=>v*3.9));controls.target.set(0,0,0);controls.update()}}
 $('focus-site').addEventListener('click',focusSelectedSite);
-$('pin-site').addEventListener('click',()=>{if(pins.length<2)pins.push({...site});else pins[1]={...site};syncMarkers();updateAll()});
+$('pin-site').addEventListener('click',()=>{if(!data)return;pins[0]={...site};syncMarkers();updateAll()});
+$('pin-site-b').addEventListener('click',()=>{if(!data||!pins[0])return;pins[1]={...site};syncMarkers();updateAll()});
 $('clear-pins').addEventListener('click',()=>{pins=[];syncMarkers();updateAll()});
 $('time-slider').addEventListener('input',e=>setTime(windowRange.start+Number(e.target.value)*3600000,false));
 function applyDate(){
