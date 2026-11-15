@@ -143,14 +143,14 @@ function updateAll(rechart=false){
   const domain=all.length?[Math.max(-90,Math.floor((Math.min(0,...all)-1)/5)*5),Math.min(90,Math.ceil((Math.max(0,...all)+1)/5)*5)]:undefined;
   for(let i=0;i<2;i++){
     const el=$('compare-'+(i?'b':'a'));
-    if(!pins[i]){el.classList.add('empty');el.innerHTML=`<span class="pin-letter">${i?'B':'A'}</span><h3>${i?'A second perspective':'Your first location'}</h3><p>${i?'Pin another location<br>to explore the trade-offs.':'Select a place on the Moon,<br>then pin it here.'}</p>`;continue;}
+    if(!pins[i]){el.classList.add('empty');el.innerHTML=`<span class="pin-letter">${i?'B':'A'}</span><h3>${i?'Site B':'Site A'}</h3><p>${i?'Pin a second location<br>to compare.':'Click the Moon or enter coordinates,<br>then pin it.'}</p>`;continue;}
     const pin=pins[i],e=elevations(pin,row);el.classList.remove('empty');
-    el.innerHTML=`<h3><span style="color:${i?'#ffbd4a':'#52e4e9'}">●</span> Site ${i?'B':'A'}</h3><p class="coord">${fmtCoord(pin)}</p><div class="mini-values"><span class="sun">☀ ${value(e.sun)}</span><span class="earth">◉ ${value(e.earth)}</span></div><div class="mini-chart">${chartSVG(allPinPoints[i],time,true,domain,pin)}</div><p class="micro">Same time range & elevation scale</p>`;
+    el.innerHTML=`<h3><span style="color:${i?'#ffbd4a':'#52e4e9'}">●</span> Site ${i?'B':'A'}</h3><p class="coord">${fmtCoord(pin)}</p><div class="mini-values"><span class="sun">Sun ${value(e.sun)}</span><span class="earth">Earth ${value(e.earth)}</span></div><div class="mini-chart">${chartSVG(allPinPoints[i],time,true,domain,pin)}</div><p class="micro">Same time range & elevation scale</p>`;
   }
-  $('pin-site').textContent=pins.length===0?'＋ Pin as Site A':pins.length===1?'＋ Pin as Site B':'↻ Replace Site B';
+  $('pin-site').textContent=pins.length===0?'Pin as Site A':pins.length===1?'Pin as Site B':'Replace Site B';
   $('clear-pins').disabled=pins.length===0;
 }
-function cacheStatus(){return `NASA/JPL Horizons · ${data.rows.length} hourly samples · ${dateString(data.rows[0][0]).slice(0,10)} – ${dateString(data.rows.at(-1)[0]).slice(0,10)} · simplified model`;}
+function cacheStatus(){return `NASA/JPL Horizons · ${data.rows.length} hourly samples · ${dateString(data.rows[0][0]).slice(0,10)} – ${dateString(data.rows.at(-1)[0]).slice(0,10)} · data retrieved ${String(data.retrievedAt||'').slice(0,10)} · simplified model`;}
 function setTime(t,recenter=true){if(!data||!Number.isFinite(t)||t<data.rows[0][0]||t>data.rows.at(-1)[0])return false;time=t;$('date-error').textContent='';$('date-error').hidden=true;$('load-status').textContent=cacheStatus();if(recenter||!windowRange||t<windowRange.start||t>windowRange.end)windowRange=chartWindow(data.rows,time);updateAll();return true;}
 $('coordinates').addEventListener('submit',e=>{e.preventDefault();if(e.currentTarget.reportValidity())selectSite({lat:Number($('latitude').value),lon:Number($('longitude').value)})});
 document.querySelectorAll('[data-lat]').forEach(b=>b.addEventListener('click',()=>selectSite({lat:Number(b.dataset.lat),lon:Number(b.dataset.lon)})));
@@ -170,13 +170,13 @@ function applyDate(){
 }
 // Native date inputs emit change while individual month/day/year segments are edited.
 // Wait for the complete edit before rejecting an out-of-range intermediate value.
-$('date-time').addEventListener('focus',()=>{playing=false;$('play').textContent='▶';$('play').setAttribute('aria-label','Play time animation')});
+$('date-time').addEventListener('focus',()=>{playing=false;$('play').innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4L13 8z" fill="currentColor"/></svg>';$('play').setAttribute('aria-label','Play time animation')});
 $('date-time').addEventListener('blur',applyDate);
 $('date-time').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();e.target.blur()}});
 const dialog=$('about');$('help').addEventListener('click',()=>dialog.showModal());$('close-help').addEventListener('click',()=>dialog.close());$('sources-link').addEventListener('click',e=>{e.preventDefault();dialog.showModal()});
-$('play').addEventListener('click',()=>{playing=!playing;$('play').textContent=playing?'Ⅱ':'▶';$('play').setAttribute('aria-label',playing?'Pause time animation':'Play time animation')});
+$('play').addEventListener('click',()=>{playing=!playing;$('play').innerHTML=playing?'<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3.2" height="11" fill="currentColor"/><rect x="9.3" y="2.5" width="3.2" height="11" fill="currentColor"/></svg>':'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4L13 8z" fill="currentColor"/></svg>';$('play').setAttribute('aria-label',playing?'Pause time animation':'Play time animation')});
 setInterval(()=>{if(playing&&data)setTime(time+3*3600000>data.rows.at(-1)[0]?data.rows[0][0]:time+3*3600000,false)},250);
-setupMissionTools({selectSite,focusSite:focusSelectedSite,setTime,pause:()=>{playing=false;$('play').textContent='▶';$('play').setAttribute('aria-label','Play time animation')}});
+setupMissionTools({selectSite,focusSite:focusSelectedSite,setTime,pause:()=>{playing=false;$('play').innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4L13 8z" fill="currentColor"/></svg>';$('play').setAttribute('aria-label','Play time animation')}});
 setupGlobe();
 try{
   const response=await fetch('./data/ephemeris-year.json');if(!response.ok)throw new Error(`Data load failed (${response.status})`);data=await response.json();

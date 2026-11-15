@@ -45,7 +45,7 @@ function renderCycle(){
  const cycle=lunarCycle(phases,state.time);
  const fraction=illuminatedFraction(state.row);
  renderPhaseMoon($('phase-picture'),state.row,`${cycle?.name??'Lunar phase'}, approximately ${(fraction*100).toFixed(1)} percent illuminated`);
- $('phase-fraction').textContent=`≈${(fraction*100).toFixed(1)}% illuminated`;
+ $('phase-fraction').textContent=`${(fraction*100).toFixed(1)}% of the disc is lit`;
  if(!cycle){$('phase-name').textContent=calendarFailed?'Phase calendar unavailable':'Loading lunar calendar…';$('phase-age').textContent='Illumination still uses NASA geometry.';$('phase-progress').value=0;$('phase-events').textContent=calendarFailed?'Refresh to retry the phase calendar.':'Loading phase dates…';return;}
  $('phase-name').textContent=cycle.name;
  $('phase-age').textContent=`${cycle.ageDays.toFixed(1)} Earth days since new Moon · this cycle ${cycle.periodDays.toFixed(2)} days`;
@@ -105,7 +105,7 @@ function renderCompare(){
  $('date-difference').textContent=`B minus A: Sun elevation ${(values[1].sun-values[0].sun).toFixed(2)}° · Earth elevation ${(values[1].earth-values[0].earth).toFixed(2)}°`;
 }
 function renderEstimates(){
- const form=$('estimate-assumptions');if(!form.checkValidity()){for(const id of ['estimated-power','estimated-heat','estimated-temperature'])$(id).textContent='—';const invalid=form.querySelector('input:invalid');$('obstruction-result').textContent=({'assumed-horizon':'Use an obstruction angle from 0° to 30°, in 0.1° increments.','panel-area':'Use a panel area from 0.1 to 1,000 m², in 0.1 m² increments.','panel-efficiency':'Use an efficiency from 0% to 100%, in whole percentages.'})[invalid?.id]??'Check the estimate assumptions.';return;}
+ const form=$('estimate-assumptions');if(!form.checkValidity()){for(const id of ['estimated-power','estimated-heat','estimated-temperature'])$(id).textContent='n/a';const invalid=form.querySelector('input:invalid');$('obstruction-result').textContent=({'assumed-horizon':'Use an obstruction angle from 0° to 30°, in 0.1° increments.','panel-area':'Use a panel area from 0.1 to 1,000 m², in 0.1 m² increments.','panel-efficiency':'Use an efficiency from 0% to 100%, in whole percentages.'})[invalid?.id]??'Check the estimate assumptions.';return;}
  const assumptions=settings(),e=elevations(state.site,state.row),estimate=simpleEstimates(e.sun,assumptions),sky=skyState(state.site,state.row,e);
  $('estimated-power').textContent=`≈${estimate.power.toFixed(1)} W`;
  $('estimated-heat').textContent=`≈${estimate.heat.toFixed(1)} W/m²`;

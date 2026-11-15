@@ -1,0 +1,955 @@
+{
+  "source": "NASA/JPL Horizons direct surface observer",
+  "retrievedAt": "2026-11-15T17:23:40.651086+00:00",
+  "rounds": {
+    "round1": [
+      {
+        "site": {
+          "lat": 0.674,
+          "lon": 23.473
+        },
+        "body": "sun",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.473%2C0.674%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.5%2C2461361.5%2C2461364.5%2C2461367.5%2C2461370.5%2C2461373.5%2C2461376.5%2C2461379.5%2C2461382.5%2C2461385.5%2C2461388.5%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round1_sun_23.473_0.674",
+        "rows": [
+          {
+            "time": "2026-11-14T00:00:00+00:00",
+            "azimuth": 91.441764,
+            "elevation": -13.158066
+          },
+          {
+            "time": "2026-11-17T00:00:00+00:00",
+            "azimuth": 91.984285,
+            "elevation": 23.364415
+          },
+          {
+            "time": "2026-11-20T00:00:00+00:00",
+            "azimuth": 94.233591,
+            "elevation": 59.796915
+          },
+          {
+            "time": "2026-11-23T00:00:00+00:00",
+            "azimuth": 250.698158,
+            "elevation": 83.326124
+          },
+          {
+            "time": "2026-11-26T00:00:00+00:00",
+            "azimuth": 267.045097,
+            "elevation": 47.254241
+          },
+          {
+            "time": "2026-11-29T00:00:00+00:00",
+            "azimuth": 268.358859,
+            "elevation": 10.871728
+          },
+          {
+            "time": "2026-12-02T00:00:00+00:00",
+            "azimuth": 268.697645,
+            "elevation": -25.580322
+          },
+          {
+            "time": "2026-12-05T00:00:00+00:00",
+            "azimuth": 268.163861,
+            "elevation": -62.090557
+          },
+          {
+            "time": "2026-12-08T00:00:00+00:00",
+            "azimuth": 95.147523,
+            "elevation": -81.307628
+          },
+          {
+            "time": "2026-12-11T00:00:00+00:00",
+            "azimuth": 91.33316,
+            "elevation": -44.769395
+          },
+          {
+            "time": "2026-12-14T00:00:00+00:00",
+            "azimuth": 91.303003,
+            "elevation": -8.229134
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": 0.674,
+          "lon": 23.473
+        },
+        "body": "earth",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2723.473%2C0.674%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.5%2C2461361.5%2C2461364.5%2C2461367.5%2C2461370.5%2C2461373.5%2C2461376.5%2C2461379.5%2C2461382.5%2C2461385.5%2C2461388.5%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round1_earth_23.473_0.674",
+        "rows": [
+          {
+            "time": "2026-11-14T00:00:00+00:00",
+            "azimuth": 279.017761,
+            "elevation": 64.944411
+          },
+          {
+            "time": "2026-11-17T00:00:00+00:00",
+            "azimuth": 270.262569,
+            "elevation": 61.193981
+          },
+          {
+            "time": "2026-11-20T00:00:00+00:00",
+            "azimuth": 262.189233,
+            "elevation": 58.897051
+          },
+          {
+            "time": "2026-11-23T00:00:00+00:00",
+            "azimuth": 255.956936,
+            "elevation": 60.416429
+          },
+          {
+            "time": "2026-11-26T00:00:00+00:00",
+            "azimuth": 254.282706,
+            "elevation": 65.819044
+          },
+          {
+            "time": "2026-11-29T00:00:00+00:00",
+            "azimuth": 262.15052,
+            "elevation": 71.407605
+          },
+          {
+            "time": "2026-12-02T00:00:00+00:00",
+            "azimuth": 277.56439,
+            "elevation": 73.219999
+          },
+          {
+            "time": "2026-12-05T00:00:00+00:00",
+            "azimuth": 287.110422,
+            "elevation": 71.672036
+          },
+          {
+            "time": "2026-12-08T00:00:00+00:00",
+            "azimuth": 286.611195,
+            "elevation": 69.05943
+          },
+          {
+            "time": "2026-12-11T00:00:00+00:00",
+            "azimuth": 279.553472,
+            "elevation": 65.86749
+          },
+          {
+            "time": "2026-12-14T00:00:00+00:00",
+            "azimuth": 270.48524,
+            "elevation": 61.975879
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": -89,
+          "lon": 0
+        },
+        "body": "sun",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%270%2C-89%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.5%2C2461361.5%2C2461364.5%2C2461367.5%2C2461370.5%2C2461373.5%2C2461376.5%2C2461379.5%2C2461382.5%2C2461385.5%2C2461388.5%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round1_sun_0_-89",
+        "rows": [
+          {
+            "time": "2026-11-14T00:00:00+00:00",
+            "azimuth": 126.635106,
+            "elevation": 0.960002
+          },
+          {
+            "time": "2026-11-17T00:00:00+00:00",
+            "azimuth": 90.10434,
+            "elevation": 1.551717
+          },
+          {
+            "time": "2026-11-20T00:00:00+00:00",
+            "azimuth": 53.622767,
+            "elevation": 2.137986
+          },
+          {
+            "time": "2026-11-23T00:00:00+00:00",
+            "azimuth": 17.183999,
+            "elevation": 2.486335
+          },
+          {
+            "time": "2026-11-26T00:00:00+00:00",
+            "azimuth": 340.768322,
+            "elevation": 2.453358
+          },
+          {
+            "time": "2026-11-29T00:00:00+00:00",
+            "azimuth": 304.34217,
+            "elevation": 2.048042
+          },
+          {
+            "time": "2026-12-02T00:00:00+00:00",
+            "azimuth": 267.876284,
+            "elevation": 1.428174
+          },
+          {
+            "time": "2026-12-05T00:00:00+00:00",
+            "azimuth": 231.361377,
+            "elevation": 0.830015
+          },
+          {
+            "time": "2026-12-08T00:00:00+00:00",
+            "azimuth": 194.808802,
+            "elevation": 0.475793
+          },
+          {
+            "time": "2026-12-11T00:00:00+00:00",
+            "azimuth": 158.245973,
+            "elevation": 0.491684
+          },
+          {
+            "time": "2026-12-14T00:00:00+00:00",
+            "azimuth": 121.704668,
+            "elevation": 0.859881
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": -89,
+          "lon": 0
+        },
+        "body": "earth",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%270%2C-89%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.5%2C2461361.5%2C2461364.5%2C2461367.5%2C2461370.5%2C2461373.5%2C2461376.5%2C2461379.5%2C2461382.5%2C2461385.5%2C2461388.5%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round1_earth_0_-89",
+        "rows": [
+          {
+            "time": "2026-11-14T00:00:00+00:00",
+            "azimuth": 358.774106,
+            "elevation": -3.648805
+          },
+          {
+            "time": "2026-11-17T00:00:00+00:00",
+            "azimuth": 354.785258,
+            "elevation": 0.029391
+          },
+          {
+            "time": "2026-11-20T00:00:00+00:00",
+            "azimuth": 352.752839,
+            "elevation": 4.164079
+          },
+          {
+            "time": "2026-11-23T00:00:00+00:00",
+            "azimuth": 354.788357,
+            "elevation": 6.986806
+          },
+          {
+            "time": "2026-11-26T00:00:00+00:00",
+            "azimuth": 0.23672,
+            "elevation": 6.448038
+          },
+          {
+            "time": "2026-11-29T00:00:00+00:00",
+            "azimuth": 5.140527,
+            "elevation": 2.569601
+          },
+          {
+            "time": "2026-12-02T00:00:00+00:00",
+            "azimuth": 6.892479,
+            "elevation": -2.082516
+          },
+          {
+            "time": "2026-12-05T00:00:00+00:00",
+            "azimuth": 5.952034,
+            "elevation": -5.185717
+          },
+          {
+            "time": "2026-12-08T00:00:00+00:00",
+            "azimuth": 3.389176,
+            "elevation": -5.721238
+          },
+          {
+            "time": "2026-12-11T00:00:00+00:00",
+            "azimuth": 359.717366,
+            "elevation": -3.737011
+          },
+          {
+            "time": "2026-12-14T00:00:00+00:00",
+            "azimuth": 355.563264,
+            "elevation": -0.072594
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": 0,
+          "lon": 85
+        },
+        "body": "sun",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2785%2C0%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.5%2C2461361.5%2C2461364.5%2C2461367.5%2C2461370.5%2C2461373.5%2C2461376.5%2C2461379.5%2C2461382.5%2C2461385.5%2C2461388.5%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round1_sun_85_0",
+        "rows": [
+          {
+            "time": "2026-11-14T00:00:00+00:00",
+            "azimuth": 92.344024,
+            "elevation": 48.358268
+          },
+          {
+            "time": "2026-11-17T00:00:00+00:00",
+            "azimuth": 107.04259,
+            "elevation": 84.690821
+          },
+          {
+            "time": "2026-11-20T00:00:00+00:00",
+            "azimuth": 267.036091,
+            "elevation": 58.562408
+          },
+          {
+            "time": "2026-11-23T00:00:00+00:00",
+            "azimuth": 268.346131,
+            "elevation": 22.164672
+          },
+          {
+            "time": "2026-11-26T00:00:00+00:00",
+            "azimuth": 268.442498,
+            "elevation": -14.215895
+          },
+          {
+            "time": "2026-11-29T00:00:00+00:00",
+            "azimuth": 267.660556,
+            "elevation": -50.609367
+          },
+          {
+            "time": "2026-12-02T00:00:00+00:00",
+            "azimuth": 243.184831,
+            "elevation": -86.74961
+          },
+          {
+            "time": "2026-12-05T00:00:00+00:00",
+            "azimuth": 92.626377,
+            "elevation": -56.349564
+          },
+          {
+            "time": "2026-12-08T00:00:00+00:00",
+            "azimuth": 91.534015,
+            "elevation": -19.807173
+          },
+          {
+            "time": "2026-12-11T00:00:00+00:00",
+            "azimuth": 91.484149,
+            "elevation": 16.754261
+          },
+          {
+            "time": "2026-12-14T00:00:00+00:00",
+            "azimuth": 92.318992,
+            "elevation": 53.289117
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": 0,
+          "lon": 85
+        },
+        "body": "earth",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2785%2C0%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.5%2C2461361.5%2C2461364.5%2C2461367.5%2C2461370.5%2C2461373.5%2C2461376.5%2C2461379.5%2C2461382.5%2C2461385.5%2C2461388.5%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round1_earth_85_0",
+        "rows": [
+          {
+            "time": "2026-11-14T00:00:00+00:00",
+            "azimuth": 274.413161,
+            "elevation": 3.516516
+          },
+          {
+            "time": "2026-11-17T00:00:00+00:00",
+            "azimuth": 270.717312,
+            "elevation": -0.464228
+          },
+          {
+            "time": "2026-11-20T00:00:00+00:00",
+            "azimuth": 266.566736,
+            "elevation": -2.493525
+          },
+          {
+            "time": "2026-11-23T00:00:00+00:00",
+            "azimuth": 263.739447,
+            "elevation": -0.471283
+          },
+          {
+            "time": "2026-11-26T00:00:00+00:00",
+            "azimuth": 264.252872,
+            "elevation": 4.934113
+          },
+          {
+            "time": "2026-11-29T00:00:00+00:00",
+            "azimuth": 268.1261,
+            "elevation": 9.864244
+          },
+          {
+            "time": "2026-12-02T00:00:00+00:00",
+            "azimuth": 272.876194,
+            "elevation": 11.627186
+          },
+          {
+            "time": "2026-12-05T00:00:00+00:00",
+            "azimuth": 276.038368,
+            "elevation": 10.654527
+          },
+          {
+            "time": "2026-12-08T00:00:00+00:00",
+            "azimuth": 276.543144,
+            "elevation": 8.096829
+          },
+          {
+            "time": "2026-12-11T00:00:00+00:00",
+            "azimuth": 274.507773,
+            "elevation": 4.458284
+          },
+          {
+            "time": "2026-12-14T00:00:00+00:00",
+            "azimuth": 270.822768,
+            "elevation": 0.315903
+          }
+        ]
+      }
+    ],
+    "round2": [
+      {
+        "site": {
+          "lat": 0,
+          "lon": 0
+        },
+        "body": "sun",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%270%2C0%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.8125%2C2461361.8125%2C2461364.8125%2C2461367.8125%2C2461370.8125%2C2461373.8125%2C2461376.8125%2C2461379.8125%2C2461382.8125%2C2461385.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round2_sun_0_0",
+        "rows": [
+          {
+            "time": "2026-11-14T07:30:00+00:00",
+            "azimuth": 91.852686,
+            "elevation": -32.79562
+          },
+          {
+            "time": "2026-11-17T07:30:00+00:00",
+            "azimuth": 91.556558,
+            "elevation": 3.723676
+          },
+          {
+            "time": "2026-11-20T07:30:00+00:00",
+            "azimuth": 92.02142,
+            "elevation": 40.181532
+          },
+          {
+            "time": "2026-11-23T07:30:00+00:00",
+            "azimuth": 96.582072,
+            "elevation": 76.532311
+          },
+          {
+            "time": "2026-11-26T07:30:00+00:00",
+            "azimuth": 266.149513,
+            "elevation": 66.941587
+          },
+          {
+            "time": "2026-11-29T07:30:00+00:00",
+            "azimuth": 268.278871,
+            "elevation": 30.560035
+          },
+          {
+            "time": "2026-12-02T07:30:00+00:00",
+            "azimuth": 268.527904,
+            "elevation": -5.899307
+          },
+          {
+            "time": "2026-12-05T07:30:00+00:00",
+            "azimuth": 268.030395,
+            "elevation": -42.414045
+          },
+          {
+            "time": "2026-12-08T07:30:00+00:00",
+            "azimuth": 262.489087,
+            "elevation": -78.904005
+          },
+          {
+            "time": "2026-12-11T07:30:00+00:00",
+            "azimuth": 93.282652,
+            "elevation": -64.394445
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": 0,
+          "lon": 180
+        },
+        "body": "sun",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27180%2C0%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.8125%2C2461361.8125%2C2461364.8125%2C2461367.8125%2C2461370.8125%2C2461373.8125%2C2461376.8125%2C2461379.8125%2C2461382.8125%2C2461385.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round2_sun_180_0",
+        "rows": [
+          {
+            "time": "2026-11-14T07:30:00+00:00",
+            "azimuth": 268.147314,
+            "elevation": 32.794488
+          },
+          {
+            "time": "2026-11-17T07:30:00+00:00",
+            "azimuth": 268.443442,
+            "elevation": -3.725019
+          },
+          {
+            "time": "2026-11-20T07:30:00+00:00",
+            "azimuth": 267.978579,
+            "elevation": -40.182561
+          },
+          {
+            "time": "2026-11-23T07:30:00+00:00",
+            "azimuth": 263.417927,
+            "elevation": -76.532626
+          },
+          {
+            "time": "2026-11-26T07:30:00+00:00",
+            "azimuth": 93.850487,
+            "elevation": -66.942112
+          },
+          {
+            "time": "2026-11-29T07:30:00+00:00",
+            "azimuth": 91.721129,
+            "elevation": -30.561194
+          },
+          {
+            "time": "2026-12-02T07:30:00+00:00",
+            "azimuth": 91.472096,
+            "elevation": 5.897963
+          },
+          {
+            "time": "2026-12-05T07:30:00+00:00",
+            "azimuth": 91.969605,
+            "elevation": 42.413044
+          },
+          {
+            "time": "2026-12-08T07:30:00+00:00",
+            "azimuth": 97.510912,
+            "elevation": 78.903742
+          },
+          {
+            "time": "2026-12-11T07:30:00+00:00",
+            "azimuth": 266.717348,
+            "elevation": 64.393861
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": 0,
+          "lon": 180
+        },
+        "body": "earth",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27180%2C0%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.8125%2C2461361.8125%2C2461364.8125%2C2461367.8125%2C2461370.8125%2C2461373.8125%2C2461376.8125%2C2461379.8125%2C2461382.8125%2C2461385.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round2_earth_180_0",
+        "rows": [
+          {
+            "time": "2026-11-14T07:30:00+00:00",
+            "azimuth": 22.124035,
+            "elevation": -85.614616
+          },
+          {
+            "time": "2026-11-17T07:30:00+00:00",
+            "azimuth": 87.088101,
+            "elevation": -84.455402
+          },
+          {
+            "time": "2026-11-20T07:30:00+00:00",
+            "azimuth": 117.953384,
+            "elevation": -81.856016
+          },
+          {
+            "time": "2026-11-23T07:30:00+00:00",
+            "azimuth": 143.555242,
+            "elevation": -82.087274
+          },
+          {
+            "time": "2026-11-26T07:30:00+00:00",
+            "azimuth": 188.801687,
+            "elevation": -84.517819
+          },
+          {
+            "time": "2026-11-29T07:30:00+00:00",
+            "azimuth": 256.175389,
+            "elevation": -84.386835
+          },
+          {
+            "time": "2026-12-02T07:30:00+00:00",
+            "azimuth": 295.207182,
+            "elevation": -82.411563
+          },
+          {
+            "time": "2026-12-05T07:30:00+00:00",
+            "azimuth": 316.870375,
+            "elevation": -81.646659
+          },
+          {
+            "time": "2026-12-08T07:30:00+00:00",
+            "azimuth": 334.480754,
+            "elevation": -82.961636
+          },
+          {
+            "time": "2026-12-11T07:30:00+00:00",
+            "azimuth": 9.664462,
+            "elevation": -85.788076
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": -60,
+          "lon": 45
+        },
+        "body": "earth",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2745%2C-60%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.8125%2C2461361.8125%2C2461364.8125%2C2461367.8125%2C2461370.8125%2C2461373.8125%2C2461376.8125%2C2461379.8125%2C2461382.8125%2C2461385.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round2_earth_45_-60",
+        "rows": [
+          {
+            "time": "2026-11-14T07:30:00+00:00",
+            "azimuth": 310.900087,
+            "elevation": 16.064724
+          },
+          {
+            "time": "2026-11-17T07:30:00+00:00",
+            "azimuth": 305.584683,
+            "elevation": 18.023622
+          },
+          {
+            "time": "2026-11-20T07:30:00+00:00",
+            "azimuth": 302.152492,
+            "elevation": 21.058681
+          },
+          {
+            "time": "2026-11-23T07:30:00+00:00",
+            "azimuth": 303.424242,
+            "elevation": 24.426247
+          },
+          {
+            "time": "2026-11-26T07:30:00+00:00",
+            "azimuth": 309.473763,
+            "elevation": 25.808017
+          },
+          {
+            "time": "2026-11-29T07:30:00+00:00",
+            "azimuth": 315.881922,
+            "elevation": 23.701001
+          },
+          {
+            "time": "2026-12-02T07:30:00+00:00",
+            "azimuth": 319.00345,
+            "elevation": 19.87243
+          },
+          {
+            "time": "2026-12-05T07:30:00+00:00",
+            "azimuth": 318.864714,
+            "elevation": 16.785783
+          },
+          {
+            "time": "2026-12-08T07:30:00+00:00",
+            "azimuth": 316.325359,
+            "elevation": 15.631232
+          },
+          {
+            "time": "2026-12-11T07:30:00+00:00",
+            "azimuth": 311.851023,
+            "elevation": 16.338271
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": -85,
+          "lon": 30
+        },
+        "body": "earth",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%2730%2C-85%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.8125%2C2461361.8125%2C2461364.8125%2C2461367.8125%2C2461370.8125%2C2461373.8125%2C2461376.8125%2C2461379.8125%2C2461382.8125%2C2461385.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round2_earth_30_-85",
+        "rows": [
+          {
+            "time": "2026-11-14T07:30:00+00:00",
+            "azimuth": 328.427831,
+            "elevation": -0.066225
+          },
+          {
+            "time": "2026-11-17T07:30:00+00:00",
+            "azimuth": 324.349373,
+            "elevation": 3.534154
+          },
+          {
+            "time": "2026-11-20T07:30:00+00:00",
+            "azimuth": 322.453576,
+            "elevation": 7.539761
+          },
+          {
+            "time": "2026-11-23T07:30:00+00:00",
+            "azimuth": 324.832275,
+            "elevation": 10.218715
+          },
+          {
+            "time": "2026-11-26T07:30:00+00:00",
+            "azimuth": 330.517536,
+            "elevation": 9.530735
+          },
+          {
+            "time": "2026-11-29T07:30:00+00:00",
+            "azimuth": 335.345572,
+            "elevation": 5.623626
+          },
+          {
+            "time": "2026-12-02T07:30:00+00:00",
+            "azimuth": 336.936372,
+            "elevation": 1.101756
+          },
+          {
+            "time": "2026-12-05T07:30:00+00:00",
+            "azimuth": 335.894883,
+            "elevation": -1.802271
+          },
+          {
+            "time": "2026-12-08T07:30:00+00:00",
+            "azimuth": 333.221727,
+            "elevation": -2.16137
+          },
+          {
+            "time": "2026-12-11T07:30:00+00:00",
+            "azimuth": 329.378596,
+            "elevation": -0.113239
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": -88,
+          "lon": 150
+        },
+        "body": "sun",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27150%2C-88%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.8125%2C2461361.8125%2C2461364.8125%2C2461367.8125%2C2461370.8125%2C2461373.8125%2C2461376.8125%2C2461379.8125%2C2461382.8125%2C2461385.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round2_sun_150_-88",
+        "rows": [
+          {
+            "time": "2026-11-14T07:30:00+00:00",
+            "azimuth": 332.769615,
+            "elevation": 3.335338
+          },
+          {
+            "time": "2026-11-17T07:30:00+00:00",
+            "azimuth": 296.211774,
+            "elevation": 2.437029
+          },
+          {
+            "time": "2026-11-20T07:30:00+00:00",
+            "azimuth": 259.753407,
+            "elevation": 1.188558
+          },
+          {
+            "time": "2026-11-23T07:30:00+00:00",
+            "azimuth": 223.362718,
+            "elevation": 0.075185
+          },
+          {
+            "time": "2026-11-26T07:30:00+00:00",
+            "azimuth": 186.986289,
+            "elevation": -0.478681
+          },
+          {
+            "time": "2026-11-29T07:30:00+00:00",
+            "azimuth": 150.582414,
+            "elevation": -0.260761
+          },
+          {
+            "time": "2026-12-02T07:30:00+00:00",
+            "azimuth": 114.133072,
+            "elevation": 0.646377
+          },
+          {
+            "time": "2026-12-05T07:30:00+00:00",
+            "azimuth": 77.626509,
+            "elevation": 1.882924
+          },
+          {
+            "time": "2026-12-08T07:30:00+00:00",
+            "azimuth": 41.053602,
+            "elevation": 2.949691
+          },
+          {
+            "time": "2026-12-11T07:30:00+00:00",
+            "azimuth": 4.437325,
+            "elevation": 3.411397
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": -88,
+          "lon": 150
+        },
+        "body": "earth",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27150%2C-88%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.8125%2C2461361.8125%2C2461364.8125%2C2461367.8125%2C2461370.8125%2C2461373.8125%2C2461376.8125%2C2461379.8125%2C2461382.8125%2C2461385.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round2_earth_150_-88",
+        "rows": [
+          {
+            "time": "2026-11-14T07:30:00+00:00",
+            "azimuth": 208.421025,
+            "elevation": -6.083125
+          },
+          {
+            "time": "2026-11-17T07:30:00+00:00",
+            "azimuth": 204.455635,
+            "elevation": -2.3529
+          },
+          {
+            "time": "2026-11-20T07:30:00+00:00",
+            "azimuth": 202.723594,
+            "elevation": 1.719652
+          },
+          {
+            "time": "2026-11-23T07:30:00+00:00",
+            "azimuth": 205.175679,
+            "elevation": 4.306831
+          },
+          {
+            "time": "2026-11-26T07:30:00+00:00",
+            "azimuth": 210.763312,
+            "elevation": 3.44929
+          },
+          {
+            "time": "2026-11-29T07:30:00+00:00",
+            "azimuth": 215.466485,
+            "elevation": -0.553617
+          },
+          {
+            "time": "2026-12-02T07:30:00+00:00",
+            "azimuth": 216.989112,
+            "elevation": -5.095965
+          },
+          {
+            "time": "2026-12-05T07:30:00+00:00",
+            "azimuth": 215.899836,
+            "elevation": -7.983583
+          },
+          {
+            "time": "2026-12-08T07:30:00+00:00",
+            "azimuth": 213.196243,
+            "elevation": -8.295079
+          },
+          {
+            "time": "2026-12-11T07:30:00+00:00",
+            "azimuth": 209.375077,
+            "elevation": -6.156933
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": 70,
+          "lon": 100
+        },
+        "body": "earth",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27100%2C70%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.8125%2C2461361.8125%2C2461364.8125%2C2461367.8125%2C2461370.8125%2C2461373.8125%2C2461376.8125%2C2461379.8125%2C2461382.8125%2C2461385.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round2_earth_100_70",
+        "rows": [
+          {
+            "time": "2026-11-14T07:30:00+00:00",
+            "azimuth": 282.344463,
+            "elevation": -0.366399
+          },
+          {
+            "time": "2026-11-17T07:30:00+00:00",
+            "azimuth": 284.758591,
+            "elevation": -5.246936
+          },
+          {
+            "time": "2026-11-20T07:30:00+00:00",
+            "azimuth": 284.981986,
+            "elevation": -9.68469
+          },
+          {
+            "time": "2026-11-23T07:30:00+00:00",
+            "azimuth": 281.732055,
+            "elevation": -11.281378
+          },
+          {
+            "time": "2026-11-26T07:30:00+00:00",
+            "azimuth": 276.753446,
+            "elevation": -8.513471
+          },
+          {
+            "time": "2026-11-29T07:30:00+00:00",
+            "azimuth": 273.791582,
+            "elevation": -3.080159
+          },
+          {
+            "time": "2026-12-02T07:30:00+00:00",
+            "azimuth": 274.015785,
+            "elevation": 1.7257
+          },
+          {
+            "time": "2026-12-05T07:30:00+00:00",
+            "azimuth": 276.075345,
+            "elevation": 4.044807
+          },
+          {
+            "time": "2026-12-08T07:30:00+00:00",
+            "azimuth": 278.694139,
+            "elevation": 3.381342
+          },
+          {
+            "time": "2026-12-11T07:30:00+00:00",
+            "azimuth": 281.4821,
+            "elevation": 0.037356
+          }
+        ]
+      },
+      {
+        "site": {
+          "lat": -20,
+          "lon": 330
+        },
+        "body": "earth",
+        "queryUrl": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27399%27&CENTER=%27coord%40301%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27330%2C-20%2C0%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&OBJ_DATA=%27NO%27&TLIST=%272461358.8125%2C2461361.8125%2C2461364.8125%2C2461367.8125%2C2461370.8125%2C2461373.8125%2C2461376.8125%2C2461379.8125%2C2461382.8125%2C2461385.8125%27&TLIST_TYPE=%27JD%27&QUANTITIES=%274%27&CSV_FORMAT=%27YES%27&TIME_DIGITS=%27MINUTES%27&APPARENT=%27AIRLESS%27",
+        "rawFile": "data/validation-rounds-raw.json#round2_earth_330_-20",
+        "rows": [
+          {
+            "time": "2026-11-14T07:30:00+00:00",
+            "azimuth": 52.211373,
+            "elevation": 53.044854
+          },
+          {
+            "time": "2026-11-17T07:30:00+00:00",
+            "azimuth": 52.626138,
+            "elevation": 58.497463
+          },
+          {
+            "time": "2026-11-20T07:30:00+00:00",
+            "azimuth": 56.865361,
+            "elevation": 62.426241
+          },
+          {
+            "time": "2026-11-23T07:30:00+00:00",
+            "azimuth": 64.434734,
+            "elevation": 61.83317
+          },
+          {
+            "time": "2026-11-26T07:30:00+00:00",
+            "azimuth": 68.29452,
+            "elevation": 56.523937
+          },
+          {
+            "time": "2026-11-29T07:30:00+00:00",
+            "azimuth": 66.160918,
+            "elevation": 50.456953
+          },
+          {
+            "time": "2026-12-02T07:30:00+00:00",
+            "azimuth": 61.453455,
+            "elevation": 46.783381
+          },
+          {
+            "time": "2026-12-05T07:30:00+00:00",
+            "azimuth": 57.089947,
+            "elevation": 46.028626
+          },
+          {
+            "time": "2026-12-08T07:30:00+00:00",
+            "azimuth": 54.321712,
+            "elevation": 47.97
+          },
+          {
+            "time": "2026-12-11T07:30:00+00:00",
+            "azimuth": 53.137625,
+            "elevation": 52.272685
+          }
+        ]
+      }
+    ]
+  }
+}
