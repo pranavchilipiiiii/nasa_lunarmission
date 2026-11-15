@@ -4,7 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Explore the Moon. Compare sunlight and potential Earth visibility using NASA/JPL Horizons data.">
   <title>MIDAS — Lunar Site Navigator</title>
-  <link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css?v=20261115-pins">
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css?v=20261115-mobile-pins">
   <script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
   <script type="module" src="app.js?v=20261115-pins"></script>
 </head>
@@ -18,7 +18,8 @@
       <section class="panel globe-panel" aria-labelledby="globe-title">
         <div class="panel-head"><div><h2 id="globe-title">Moon</h2></div><button id="reset-view" class="icon-button" title="Reset globe view" aria-label="Reset globe view">Reset view</button></div>
         <div id="globe" aria-label="Interactive lunar globe. Use the coordinate fields below as a keyboard alternative."><div class="globe-tag"><span class="dot sun"></span>Sun position follows the selected date</div><div id="globe-error" hidden>3D view unavailable. You can still explore using the coordinate fields below.</div></div>
-        <div class="globe-hint"><span>Drag to orbit</span><span>Click to select</span><span>Scroll to zoom</span></div>
+        <div class="globe-hint"><span>Drag to orbit</span><span>Tap/click to select</span><span>Scroll to zoom</span></div>
+        <div class="pin-actions" role="group" aria-label="Save selected location for comparison"><button id="pin-site" class="primary" disabled>Pin as Site A</button><button id="pin-site-b" class="primary" disabled>Pin as Site B</button></div><p id="pin-status" class="micro pin-status" role="status">Choose a location, then pin it as Site A. Choose another location for Site B.</p>
         <form id="coordinates" class="coordinate-form"><label>Latitude <input id="latitude" type="number" min="-90" max="90" step="any" value="-89" required></label><label>Longitude <input id="longitude" type="number" min="-180" max="180" step="any" value="0" required></label><button type="submit">Go to site</button></form>
         <div class="presets" aria-label="Example locations"><button data-lat="-89" data-lon="0">South polar example</button><button data-lat="0.674" data-lon="23.473">Apollo 11</button><button data-lat="0" data-lon="85">Near limb</button><button id="focus-site">Focus selected site</button></div>
         <div class="catalog-control"><label for="site-catalog">Explore mission landing sites</label><select id="site-catalog"><option value="">Custom / example location</option></select><a id="catalog-source" href="https://nssdc.gsfc.nasa.gov/planetary/lunar/lunar_artifact_impacts.html" target="_blank" rel="noopener">NASA coordinate source</a></div>
@@ -28,7 +29,7 @@
         <section class="panel site-panel"><div class="panel-head"><div><h2>Selected site</h2></div><span id="site-coordinates" class="coordinate-chip">89.00° S · 0.00° E</span></div>
           <div class="metrics"><article><span class="metric-label"><i class="key sun"></i>Sun elevation</span><strong id="sun-value">n/a</strong><span id="sun-status" class="status">Awaiting data</span><span id="sun-direction" class="sky-detail">n/a</span></article><article><span class="metric-label"><i class="key earth"></i>Earth elevation</span><strong id="earth-value">n/a</strong><span id="earth-status" class="status">Awaiting data</span><span id="earth-direction" class="sky-detail">n/a</span></article></div>
           <div class="events"><p><span>Next Sun center crossing</span><b id="sun-event">n/a</b></p><p><span>Next Earth center crossing</span><b id="earth-event">n/a</b></p></div>
-          <div class="pin-actions" role="group" aria-label="Save selected location for comparison"><button id="pin-site" class="primary" disabled>Pin as Site A</button><button id="pin-site-b" class="primary" disabled>Pin as Site B</button></div><p id="pin-status" class="micro pin-status" role="status">Choose a location, then pin it as Site A. Choose another location for Site B.</p><p class="micro">Geometric visibility, not a landing-safety assessment.</p>
+          <p class="micro">Geometric visibility, not a landing-safety assessment.</p>
         </section>
         <section class="panel chart-panel"><div class="panel-head"><div><h2>Elevation over 30 days</h2></div><span class="chart-unit">Elevation (°)</span></div><div class="legend"><span><i class="sun-bg"></i>Sun</span><span><i class="earth-bg"></i>Earth</span><span><i class="horizon-key"></i>Horizon</span></div><div id="main-chart" class="chart" aria-live="off"></div><p class="micro">Moving 30-day window · hourly samples · UTC</p></section>
       </aside>

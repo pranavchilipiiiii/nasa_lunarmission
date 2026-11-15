@@ -82,3 +82,10 @@ dialog{background:rgba(10,18,30,.72);backdrop-filter:blur(28px);-webkit-backdrop
 .pin-actions{display:flex;gap:10px;margin:5px 24px 0}
 .pin-actions .primary{flex:1;min-width:0;width:auto;margin:0}
 .site-panel .pin-status{text-align:left;color:#dbe9f6;line-height:1.6}
+
+/* Keep pin actions beside the Moon on phones instead of below the full site card. */
+.globe-panel .pin-status{text-align:left;color:#dbe9f6;line-height:1.6}
+.globe-panel .pin-actions .primary{min-height:44px}
+@media(max-width:720px){.globe-panel .pin-actions{margin-left:16px;margin-right:16px}.globe-panel .pin-status{margin-left:16px;margin-right:16px}}
+
+@media(max-width:720px){.globe-hint{flex-wrap:wrap;gap:8px 16px}}
