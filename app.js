@@ -151,7 +151,7 @@ function updateAll(rechart=false){
   $('clear-pins').disabled=pins.length===0;
 }
 function cacheStatus(){return `NASA/JPL Horizons · ${data.rows.length} hourly samples · ${dateString(data.rows[0][0]).slice(0,10)} – ${dateString(data.rows.at(-1)[0]).slice(0,10)} · simplified model`;}
-function setTime(t,recenter=true){if(!data||!Number.isFinite(t)||t<data.rows[0][0]||t>data.rows.at(-1)[0])return false;time=t;$('load-status').textContent=cacheStatus();if(recenter||!windowRange||t<windowRange.start||t>windowRange.end)windowRange=chartWindow(data.rows,time);updateAll();return true;}
+function setTime(t,recenter=true){if(!data||!Number.isFinite(t)||t<data.rows[0][0]||t>data.rows.at(-1)[0])return false;time=t;$('date-error').textContent='';$('date-error').hidden=true;$('load-status').textContent=cacheStatus();if(recenter||!windowRange||t<windowRange.start||t>windowRange.end)windowRange=chartWindow(data.rows,time);updateAll();return true;}
 $('coordinates').addEventListener('submit',e=>{e.preventDefault();if(e.currentTarget.reportValidity())selectSite({lat:Number($('latitude').value),lon:Number($('longitude').value)})});
 document.querySelectorAll('[data-lat]').forEach(b=>b.addEventListener('click',()=>selectSite({lat:Number(b.dataset.lat),lon:Number(b.dataset.lon)})));
 $('reset-view').addEventListener('click',()=>{if(camera){camera.position.set(3.9,.7,.3);controls.target.set(0,0,0);controls.update()}});
@@ -163,7 +163,8 @@ $('time-slider').addEventListener('input',e=>setTime(windowRange.start+Number(e.
 function applyDate(){
   const input=$('date-time'),t=Date.parse(input.value+'Z');
   if(!setTime(t)){
-    $('load-status').textContent=`Choose a UTC date between ${dateString(data.rows[0][0])} and ${dateString(data.rows.at(-1)[0])}.`;
+    const message=`Choose a UTC date between ${dateString(data.rows[0][0])} and ${dateString(data.rows.at(-1)[0])}. Your previous date was restored.`;
+    $('load-status').textContent=message;$('date-error').textContent=message;$('date-error').hidden=false;
     input.value=new Date(time).toISOString().slice(0,16);
   }
 }

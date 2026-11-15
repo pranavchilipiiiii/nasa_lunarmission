@@ -105,11 +105,11 @@ function renderCompare(){
  $('date-difference').textContent=`B minus A: Sun elevation ${(values[1].sun-values[0].sun).toFixed(2)}° · Earth elevation ${(values[1].earth-values[0].earth).toFixed(2)}°`;
 }
 function renderEstimates(){
- const form=$('estimate-assumptions');if(!form.checkValidity()){for(const id of ['estimated-power','estimated-heat','estimated-temperature'])$(id).textContent='—';$('obstruction-result').textContent='Enter a valid obstruction angle, positive panel area, and efficiency from 0% to 100%.';return;}
+ const form=$('estimate-assumptions');if(!form.checkValidity()){for(const id of ['estimated-power','estimated-heat','estimated-temperature'])$(id).textContent='—';const invalid=form.querySelector('input:invalid');$('obstruction-result').textContent=({'assumed-horizon':'Use an obstruction angle from 0° to 30°, in 0.1° increments.','panel-area':'Use a panel area from 0.1 to 1,000 m², in 0.1 m² increments.','panel-efficiency':'Use an efficiency from 0% to 100%, in whole percentages.'})[invalid?.id]??'Check the estimate assumptions.';return;}
  const assumptions=settings(),e=elevations(state.site,state.row),estimate=simpleEstimates(e.sun,assumptions),sky=skyState(state.site,state.row,e);
  $('estimated-power').textContent=`≈${estimate.power.toFixed(1)} W`;
  $('estimated-heat').textContent=`≈${estimate.heat.toFixed(1)} W/m²`;
- $('estimated-temperature').textContent=estimate.temperatureK?`≈${estimate.temperatureK.toFixed(0)} K`:'— in shadow';
+ $('estimated-temperature').textContent=estimate.temperatureK?`≈${estimate.temperatureK.toFixed(0)} K`:'— no modeled incident heat';
  const earthClear=e.earth-assumptions.horizon;
  const earthState=earthClear>=sky.earth.radius?'full':earthClear<=-sky.earth.radius?'below':'partial';
  $('obstruction-result').textContent=`With a uniform ${assumptions.horizon.toFixed(1)}° assumed skyline: Sun disc ${estimate.visible===0?'blocked':estimate.visible===1?'clear':`≈${Math.round(estimate.visible*100)}% clear`}; Earth disc ${earthState==='full'?'clear':earthState==='below'?'blocked':'partly clear'}. This is a user-defined obstruction scenario, not measured terrain.`;
