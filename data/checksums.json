@@ -1,0 +1,11 @@
+{
+  "data/ephemeris-year.json": "ddd6bc206e89b410682e8e6dd4603ae70dcab9ff4022864573fb3b7577f3d2c7",
+  "data/ephemeris.json": "9c18736214c9f740c30a57e9d75ae1979a747f34b2482adf25208356141eee8c",
+  "data/horizons-raw.txt": "25e74734e9f07ed33967843f9555c7b05d68f8322c7fcdcf2d3090ce096d05fe",
+  "data/horizons-year-raw.txt": "ab7a1d30aa5b7014780e9fd1ec760884599ca060a81b8b70132d7c76f2b246e2",
+  "data/landing-sites.json": "3eace87c3d180001083fa87a3ef9a344fbdb2b8e59290c14504bbb3ace03680e",
+  "data/lunar-phases.json": "53cfc18997a12bfd69ea4610918085ddea925265d11b03731f3b865e68041ad5",
+  "data/validation-catalog-raw.json": "a555ce43fd7c0285570e4fddb8feedd57f762a654917c9282cb388f4086e5add",
+  "data/validation-extended-raw.json": "e58d0ad1a1c48ea210a1d3b8c0e21be6d94fcd740f7ef242e5b8f3e932eaec0a",
+  "data/validation-rounds-raw.json": "5c1ccdc06e9efa9b2492c61214a27e28fdcae7e579dd64f27771eeb4b41805c4"
+}
