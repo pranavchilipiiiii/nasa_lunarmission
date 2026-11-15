@@ -16,7 +16,7 @@
     <a class="tools-jump" href="#mission-tools">Lunar cycle & mission planning tools ↓</a>
     <div class="workspace">
       <section class="panel globe-panel" aria-labelledby="globe-title">
-        <div class="panel-head"><div><span class="eyebrow">01 / EXPLORE</span><h2 id="globe-title">The Moon is your starting point.</h2></div><button id="reset-view" class="icon-button" title="Reset globe view">↺</button></div>
+        <div class="panel-head"><div><span class="eyebrow">01 / EXPLORE</span><h2 id="globe-title">The Moon is your starting point.</h2></div><button id="reset-view" class="icon-button" title="Reset globe view" aria-label="Reset globe view">↺</button></div>
         <div id="globe" aria-label="Interactive lunar globe. Use the coordinate fields below as a keyboard alternative."><div class="globe-tag"><span class="dot sun"></span>Sunlight changes with your date</div><div id="globe-error" hidden>3D view unavailable. You can still explore using the coordinate fields below.</div></div>
         <div class="globe-hint"><span>↔ Drag to orbit</span><span>⌖ Click to select</span><span>⊕ Scroll to zoom</span></div>
         <form id="coordinates" class="coordinate-form"><label>Latitude <input id="latitude" type="number" min="-90" max="90" step="any" value="-89" required></label><label>Longitude <input id="longitude" type="number" min="-180" max="180" step="any" value="0" required></label><button type="submit">Go to site ↗</button></form>
@@ -50,7 +50,7 @@
         <p class="tool-note">A lunar cycle averages about 29.5 Earth days. Phase describes the illuminated part of the Moon we see from Earth; sunlight at your chosen lunar site depends on its own location and date. The textured preview uses a NASA Moon map, lunar north up, with lighting from the selected Sun and Earth directions. Brightness is illustrative. Illumination is approximated from NASA geometry; calendar dates are from the <a href="https://aa.usno.navy.mil/data/MoonPhases" target="_blank" rel="noopener">US Naval Observatory</a> in UT, shown at minute precision. Eclipse dimming is not included.</p>
       </div>
       <div id="tool-horizon" class="tool-panel" role="tabpanel" aria-labelledby="tab-horizon" data-tool-panel="horizon" hidden>
-        <h3>A panoramic view from your site.</h3><p class="tool-note">Bearings run clockwise from north. The solid reference is the smooth 0° horizon. A dashed amber line, when enabled in Simple estimates, shows your assumed obstruction angle.</p>
+        <h3>A panoramic view from your site.</h3><p class="tool-note">Bearings run clockwise from north. North repeats at both edges: 0° and 360° are the same direction. The solid reference is the smooth 0° horizon. A dashed amber line, when enabled in Simple estimates, shows your assumed obstruction angle.</p>
         <div id="horizon-view" class="horizon-view"></div><p id="horizon-readings" class="tool-note"></p>
       </div>
       <div id="tool-windows" class="tool-panel" role="tabpanel" aria-labelledby="tab-windows" data-tool-panel="windows" hidden>
@@ -60,7 +60,7 @@
       </div>
       <div id="tool-dates" class="tool-panel" role="tabpanel" aria-labelledby="tab-dates" data-tool-panel="dates" hidden>
         <h3>What if the landing date changes?</h3><p class="tool-note">A uses the selected site and date above. B uses the same site on an alternative date. Charts share the same elevation scale and show days since each landing.</p>
-        <div class="alternative-controls"><label>Alternative landing date · UTC<input id="alternative-date" type="datetime-local" step="60" title="Press Enter or leave the field to apply"></label><div class="date-shortcuts"><button data-offset="7">+7 days</button><button data-offset="14">+14 days</button><button data-offset="30">+30 days</button></div><button id="apply-alternative">Make B the selected date ↗</button></div>
+        <div class="alternative-controls"><label>Alternative landing date · UTC<input id="alternative-date" disabled type="datetime-local" step="60" title="Press Enter or leave the field to apply"></label><div class="date-shortcuts"><button disabled data-offset="7">+7 days</button><button disabled data-offset="14">+14 days</button><button disabled data-offset="30">+30 days</button></div><button id="apply-alternative" disabled>Make B the selected date ↗</button></div>
         <p id="compare-error" role="status" class="tool-note error-text"></p><p id="alternative-note" class="tool-note"></p><div class="scenario-grid"><article id="date-0-result"></article><article id="date-1-result"></article></div><p id="date-difference" class="tool-note"></p>
       </div>
       <div id="tool-estimates" class="tool-panel" role="tabpanel" aria-labelledby="tab-estimates" data-tool-panel="estimates" hidden>

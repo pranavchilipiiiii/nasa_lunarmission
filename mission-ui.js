@@ -6,7 +6,7 @@ import {renderPhaseMoon} from './phase-moon.js';
 const $=id=>document.getElementById(id);
 const stamp=t=>new Date(t).toISOString().slice(0,16).replace('T',' ')+' UTC';
 const coord=s=>`${Math.abs(s.lat).toFixed(2)}° ${s.lat<0?'S':'N'}, ${Math.abs(s.lon).toFixed(2)}° ${s.lon<0?'W':'E'}`;
-let state,callbacks,phases=[],catalog=[],active='cycle',alternative=null,offset=7,initialized=false;
+let state,callbacks,phases=[],catalog=[],active='cycle',alternative=null,offset=7,initialized=false,calendarFailed=false;
 const settings=()=>({horizon:$('assumed-horizon').validity.valid?Number($('assumed-horizon').value):0,area:Number($('panel-area').value),efficiency:Number($('panel-efficiency').value)});
 const hours=n=>`${n.toFixed(1)} h`;
 export function setupMissionTools(api){
@@ -21,29 +21,33 @@ export function setupMissionTools(api){
  $('alternative-date').addEventListener('focus',()=>callbacks.pause());
  $('alternative-date').addEventListener('blur',applyAlternative);
  $('alternative-date').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();e.target.blur();}});
- document.querySelectorAll('[data-offset]').forEach(b=>b.addEventListener('click',()=>{offset=Number(b.dataset.offset);alternative=null;$('compare-error').textContent='';renderCompare();}));
- $('apply-alternative').addEventListener('click',()=>{callbacks.pause();callbacks.setTime(altTime());});
+ document.querySelectorAll('[data-offset]').forEach(b=>b.addEventListener('click',()=>{if(!state)return;offset=Number(b.dataset.offset);alternative=null;$('compare-error').textContent='';renderCompare();}));
+ $('apply-alternative').addEventListener('click',()=>{if(!state)return;callbacks.pause();callbacks.setTime(altTime());});
  $('estimate-assumptions').addEventListener('input',render);
  $('estimate-assumptions').addEventListener('change',render);
- Promise.all([fetch('./data/lunar-phases.json').then(r=>{if(!r.ok)throw Error('Phase calendar unavailable');return r.json()}),fetch('./data/landing-sites.json').then(r=>{if(!r.ok)throw Error('Site catalog unavailable');return r.json()})]).then(([p,c])=>{
-  phases=p.events;catalog=c.sites;
+ // Optional downloads are independent: a calendar outage must not hide the site catalog.
+ fetch('./data/lunar-phases.json').then(r=>{if(!r.ok)throw Error('Phase calendar unavailable');return r.json()}).then(p=>{phases=p.events;render();}).catch(error=>{calendarFailed=true;render();console.warn(error)});
+ fetch('./data/landing-sites.json').then(r=>{if(!r.ok)throw Error('Site catalog unavailable');return r.json()}).then(c=>{
+  catalog=c.sites;
   for(const group of [...new Set(catalog.map(s=>s.group))]){const options=document.createElement('optgroup');options.label=group;catalog.forEach((site,i)=>{if(site.group!==group)return;const option=document.createElement('option');option.value=String(i);option.textContent=site.name;options.append(option)});$('site-catalog').append(options)}
   $('catalog-source').href=c.source;render();
- }).catch(error=>{$('phase-name').textContent='Additional calendar/catalog data unavailable';console.warn(error)});
+ }).catch(error=>{$('site-catalog').options[0].textContent='Site catalog unavailable · use coordinates';console.warn(error)});
 }
 export function updateMissionTools(next){
  state=next;
- if(!initialized){const first=new Date(state.data.rows[0][0]).toISOString().slice(0,16),last=new Date(state.data.rows.at(-1)[0]).toISOString().slice(0,16);$('alternative-date').min=first;$('alternative-date').max=last;initialized=true;}
+ if(!initialized){const first=new Date(state.data.rows[0][0]).toISOString().slice(0,16),last=new Date(state.data.rows.at(-1)[0]).toISOString().slice(0,16);$('alternative-date').min=first;$('alternative-date').max=last;document.querySelectorAll('#alternative-date,[data-offset],#apply-alternative').forEach(el=>el.disabled=false);initialized=true;}
  $('mission-context').textContent=`${coord(state.site)} · ${stamp(state.time)}`;
  const selected=catalog.findIndex(s=>Math.abs(s.lat-state.site.lat)<.001&&Math.abs(s.lon-state.site.lon)<.001);$('site-catalog').value=selected<0?'':String(selected);
  render();
 }
 function render(){if(!state)return;if(active==='cycle')renderCycle();if(active==='horizon')renderHorizon();if(active==='windows')renderWindows();if(active==='dates')renderCompare();if(active==='estimates')renderEstimates();}
 function renderCycle(){
- const cycle=lunarCycle(phases,state.time);if(!cycle)return;
+ const cycle=lunarCycle(phases,state.time);
  const fraction=illuminatedFraction(state.row);
- renderPhaseMoon($('phase-picture'),state.row,`${cycle.name}, approximately ${(fraction*100).toFixed(1)} percent illuminated`);
- $('phase-name').textContent=cycle.name;$('phase-fraction').textContent=`≈${(fraction*100).toFixed(1)}% illuminated`;
+ renderPhaseMoon($('phase-picture'),state.row,`${cycle?.name??'Lunar phase'}, approximately ${(fraction*100).toFixed(1)} percent illuminated`);
+ $('phase-fraction').textContent=`≈${(fraction*100).toFixed(1)}% illuminated`;
+ if(!cycle){$('phase-name').textContent=calendarFailed?'Phase calendar unavailable':'Loading lunar calendar…';$('phase-age').textContent='Illumination still uses NASA geometry.';$('phase-progress').value=0;$('phase-events').textContent=calendarFailed?'Refresh to retry the phase calendar.':'Loading phase dates…';return;}
+ $('phase-name').textContent=cycle.name;
  $('phase-age').textContent=`${cycle.ageDays.toFixed(1)} Earth days since new Moon · this cycle ${cycle.periodDays.toFixed(2)} days`;
  $('phase-progress').value=cycle.progress*100;
  const first=state.data.rows[0][0],last=state.data.rows.at(-1)[0];
@@ -72,9 +76,10 @@ function renderWindows(){
  }
 }
 function altTime(){return alternative??Math.min(state.data.rows.at(-1)[0],state.time+offset*DAY_MS);}
-function relativeChart(points,start){
- const w=360,h=150,x=t=>30+(t-start)/(30*DAY_MS)*315,y=e=>15+(90-e)/180*105;
- let content='';for(const e of [-90,0,90])content+=`<line x1="30" x2="345" y1="${y(e)}" y2="${y(e)}" stroke="#344356" stroke-dasharray="${e===0?'4 4':'0'}"/><text x="25" y="${y(e)+3}" text-anchor="end">${e}°</text>`;
+function relativeChart(points,start,domain){
+ const [min,max,step]=domain;
+ const w=360,h=150,x=t=>30+(t-start)/(30*DAY_MS)*315,y=e=>15+(max-e)/(max-min)*105;
+ let content='';for(let e=min;e<=max;e+=step)content+=`<line x1="30" x2="345" y1="${y(e)}" y2="${y(e)}" stroke="#344356" stroke-dasharray="${e===0?'4 4':'0'}"/><text x="25" y="${y(e)+3}" text-anchor="end">${e}°</text>`;
  for(const [key,color] of [['sun','#ffbd4a'],['earth','#52e4e9']])content+=`<path d="${points.filter((_,i)=>i%3===0||i===points.length-1).map((p,i)=>`${i?'L':'M'}${x(p.time).toFixed(1)},${y(p[key]).toFixed(1)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="2"/>`;
  for(const d of [0,10,20,30])content+=`<text x="${x(start+d*DAY_MS)}" y="142" text-anchor="middle">Day ${d}</text>`;
  return `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Sun and Earth elevations during the thirty days following this landing date">${content}</svg>`;
@@ -82,6 +87,12 @@ function relativeChart(points,start){
 function renderCompare(){
  const other=altTime();$('alternative-date').value=new Date(other).toISOString().slice(0,16);
  const cacheEnd=state.data.rows.at(-1)[0],all=series(state.site,state.data.rows),values=[];
+ // Fit both scenarios together so low polar elevations remain readable on one scale.
+ const samples=all.filter(p=>[state.time,other].some(t=>p.time>=t&&p.time<=t+30*DAY_MS));
+ for(const t of [state.time,other,Math.min(cacheEnd,state.time+30*DAY_MS),Math.min(cacheEnd,other+30*DAY_MS)])samples.push(elevations(state.site,atTime(state.data.rows,t)));
+ const angles=samples.flatMap(p=>[p.sun,p.earth]),low=Math.min(0,...angles),high=Math.max(0,...angles);
+ const step=[1,2,5,10,15,30,45,90].find(s=>s>=(high-low+2)/4)||90;
+ const domain=[Math.max(-90,Math.floor((low-1)/step)*step),Math.min(90,Math.ceil((high+1)/step)*step),step];
  $('alternative-note').textContent=alternative===null&&state.time+offset*DAY_MS>cacheEnd?'The requested date shift extends beyond the cache; B is limited to '+stamp(cacheEnd)+'.':'';
  for(const [i,t] of [state.time,other].entries()){
   const end=Math.min(cacheEnd,t+30*DAY_MS),row=atTime(state.data.rows,t),e=elevations(state.site,row);values.push(e);
@@ -89,7 +100,7 @@ function renderCompare(){
   if(!visible.length||visible[0].time!==t)visible.unshift({time:t,...e});
   if(visible.at(-1).time<end)visible.push({time:end,...elevations(state.site,atTime(state.data.rows,end))});
   const sun=visibilityWindows(all,'sun',t,end),earth=visibilityWindows(all,'earth',t,end);
-  $(`date-${i}-result`).innerHTML=`<h3>${i?'B · Alternative':'A · Selected date'}</h3><p>${stamp(t)}</p><div class="scenario-values"><span class="sun">Sun ${e.sun.toFixed(2)}°</span><span class="earth">Earth ${e.earth.toFixed(2)}°</span></div><div class="relative-chart">${end>t?relativeChart(visible,t):'<p>No post-landing chart coverage at the final cache timestamp.</p>'}</div><p>${end>t?`Sunlight ≈${hours(sun.hours)} · Earth visibility ≈${hours(earth.hours)}`:'Duration estimates unavailable beyond this date.'}</p><small>${end-t<30*DAY_MS?'Coverage ends at the cache boundary; no extrapolation.':'30 days after landing · center above 0°'}</small>`;
+  $(`date-${i}-result`).innerHTML=`<h3>${i?'B · Alternative':'A · Selected date'}</h3><p>${stamp(t)}</p><div class="scenario-values"><span class="sun">Sun ${e.sun.toFixed(2)}°</span><span class="earth">Earth ${e.earth.toFixed(2)}°</span></div><div class="relative-chart">${end>t?relativeChart(visible,t,domain):'<p>No post-landing chart coverage at the final cache timestamp.</p>'}</div><p>${end>t?`Sunlight ≈${hours(sun.hours)} · Earth visibility ≈${hours(earth.hours)}`:'Duration estimates unavailable beyond this date.'}</p><small>${end-t<30*DAY_MS?'Coverage ends at the cache boundary; no extrapolation.':'30 days after landing · center above 0°'}</small>`;
  }
  $('date-difference').textContent=`B minus A: Sun elevation ${(values[1].sun-values[0].sun).toFixed(2)}° · Earth elevation ${(values[1].earth-values[0].earth).toFixed(2)}°`;
 }

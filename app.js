@@ -11,7 +11,7 @@ const $ = id => document.getElementById(id);
 let data, time, site={lat:-89,lon:0}, pins=[], points=[], playing=false, windowRange;
 let scene, camera, renderer, controls, moon, sunlight, selectedMarker, pinMarkers=[], modelRequest=0;
 const fmtCoord = s => `${Math.abs(s.lat).toFixed(2)}° ${s.lat<0?'S':'N'} · ${Math.abs(s.lon).toFixed(2)}° ${s.lon<0?'W':'E'}`;
-const value = n => `${n>=0?'+':''}${n.toFixed(2)}°`;
+const value = n => {const rounded=Number(n.toFixed(2));return `${rounded>=0?'+':''}${rounded.toFixed(2)}°`;};
 const dateString = t => new Date(t).toISOString().slice(0,16).replace('T',' ')+' UTC';
 const dayLabel = t => new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric',timeZone:'UTC'}).format(t);
 
@@ -185,4 +185,4 @@ try{
   ['date-time','time-slider','play','pin-site'].forEach(id=>$(id).disabled=false);
   $('load-status').textContent=cacheStatus();
   $('query-link').href=data.queryUrl;selectSite(site);
-}catch(error){$('load-status').textContent='Could not load the NASA data. Run this folder through a web server and refresh; see README.';$('load-status').classList.add('error');console.error(error)}
+}catch(error){$('load-status').textContent='Could not load the NASA data. Check your connection and refresh to try again.';$('load-status').classList.add('error');$('mission-context').textContent='Mission results unavailable until NASA data loads. Check your connection and refresh.';$('phase-name').textContent='NASA data unavailable';console.error(error)}
