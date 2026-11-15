@@ -111,4 +111,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch workflow, file ownership, 
 
 ## AI use
 
-This project was built with AI assistance (Claude and Codex, via Devin). The AI drafted code, data checks, and text. The team reviewed and tested the outputs. Specific contributions are listed in CONTRIBUTING.md.
+This project was built with AI assistance (Claude and Codex). They helped with research, information gathering, visual design, and image creation.
