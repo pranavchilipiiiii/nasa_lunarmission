@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs';
 import {atTime,elevations} from '../math.mjs';
 import {azimuth} from '../math-additions.mjs';
 
-const cache=JSON.parse(readFileSync(new URL('../data/ephemeris.json',import.meta.url)));
+const cache=JSON.parse(readFileSync(new URL('../data/ephemeris-year.json',import.meta.url)));
 const fixture=JSON.parse(readFileSync(new URL('./validation-rounds.json',import.meta.url)));
 const report={};
 
