@@ -73,3 +73,7 @@ input,select{background:rgba(4,9,16,.45);border:1px solid rgba(255,255,255,.14);
 .coordinate-chip{border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)}
 footer{border-top:1px solid rgba(255,255,255,.08)}
 dialog{background:rgba(10,18,30,.72);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.14);border-radius:16px}
+
+/* Keep source and model limits readable over the photographic background. */
+.intro{gap:24px}
+.intro p,.load-status{color:#eaf4ff;background:rgba(4,9,16,.82);padding:8px 12px;border-radius:8px}

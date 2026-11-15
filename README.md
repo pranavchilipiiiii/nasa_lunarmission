@@ -87,7 +87,11 @@ node tests/mission.test.mjs
 node tests/moon-model.test.mjs
 node tests/extended-validation.test.mjs
 node tests/validation-rounds.test.mjs
+node tests/validation-catalog.test.mjs
+node tests/checksums.test.mjs
 node --check app.js
+node --check mission-ui.js
+node --check phase-moon.js
 ```
 
 Tests need Node.js 18 or newer.

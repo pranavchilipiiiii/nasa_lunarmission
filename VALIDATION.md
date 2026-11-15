@@ -12,7 +12,7 @@ against direct NASA/JPL Horizons surface-observer output (targets Sun `10` and E
 | 2 | 7 | 10 dates at 07:30, 2026-11-14 to 12-11 | 90 | 0.0009 | 0.0046 | 0.0059 |
 
 Round 2 times fall between the hourly cache samples, so it also tests the interpolation.
-Azimuth uses `azimuth()` in `math-additions.mjs`, now integrated in the site. The exact-pole and overhead cases return undefined rather than an arbitrary bearing. Rounds 1 and 2 below are Claude-reported aggregate results; raw samples for those rounds were not included in the handoff. Round 3 is saved and rerunnable in this repository.
+Azimuth uses `azimuth()` in `math-additions.mjs`, now integrated in the site. The exact-pole and overhead cases return undefined rather than an arbitrary bearing. Rounds 1 and 2 were subsequently re-queried and are now reproducible against the shipped `data/ephemeris-year.json` cache. Exact queries and raw NASA responses are saved in `data/validation-rounds-raw.json`; references are in `tests/validation-rounds.json`. Run `node tests/validation-rounds.test.mjs`. Round 3 is also saved and rerunnable.
 
 ## Round 1 (00:00 UTC)
 
@@ -68,7 +68,7 @@ All are below 0.01° for these samples; this is not an error guarantee elsewhere
   responses if present; remove/relocate that raw file to request fresh references).
 - Re-run comparisons: `node tests/extended-validation.test.mjs`.
 
-Combined scope: **174 elevation comparisons** (156 Claude-reported + 18
+Combined scope: **174 elevation comparisons** (156 re-queried round-1/2 samples + 18
 reproducible extended-date samples), with azimuth checked on **108** of them.
 Disc-area fractions are analytic approximations for an unobstructed circular disc
 above a smooth horizon, not direct-Horizons validation results. Sun angular radius
@@ -89,3 +89,12 @@ bounds, obstruction/power limiting cases, and radiative equation balance. The
 USNO phase calendar is cached with original responses. No independent validation
 of actual terrain, solar-array output or hardware temperature is claimed: the
 assumptions and excluded effects are explicit in the estimates tab and SOURCES.md.
+
+## Catalog-wide reproducible checks
+
+An additional **720 elevation comparisons** cover all 15 catalog sites, Sun and Earth, at 24 times (12 dates at 00:00 and 07:30 UTC) from November 19, 2026 through October 15, 2027. Worst sampled differences: Sun **0.000776°**, Earth **0.005444°**, sky-projected azimuth **0.005460°**. These are sampled checks, not a global error bound.
+
+- Raw NASA responses and exact queries: `data/validation-catalog-raw.json`.
+- Parsed references: `tests/validation-catalog.json`.
+- Re-run: `node tests/validation-catalog.test.mjs`.
+- Retrieve references: `python3 scripts/validate_catalog.py` (reuses saved responses).
